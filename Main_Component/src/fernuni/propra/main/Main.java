@@ -26,11 +26,11 @@ public class Main {
 	 * Haupteinstiegsfunktion
 	 */
 	public static void main(String[] args) {
-		
+			
 		HashMap<String, Object> params = getParams(args);
 		System.out.println(params);
 	}
-	
+		
 	public static HashMap<String, Object> getParams(String[] args) {
 		
 		// Parameters
@@ -41,26 +41,26 @@ public class Main {
 		// Process command line arguments
 		for (String arg : args) {
 			
-            if (mode == null && arg.matches("r=(s|sd|v|vd|d)")) {
-            	String modeValue = arg.split("=")[1];
-            	
-            	mode = new HashMap<String, Boolean>();
-            	mode.put("solve", modeValue.contains("s"));
+			if (mode == null && arg.matches("r=(s|sd|v|vd|d)")) {
+				String modeValue = arg.split("=")[1];
+				
+				mode = new HashMap<String, Boolean>();
+				mode.put("solve", modeValue.contains("s"));
 				mode.put("display", modeValue.contains("d"));
 				mode.put("validate", modeValue.contains("v"));
+						
+				continue;
+			}
 				
+			if (inputFile == null && arg.matches("if=.*")) {
+				inputFile = arg.split("=")[1];
 				continue;
-            }
-            
-            if (inputFile == null && arg.matches("if=.*")) {
-            	inputFile = arg.split("=")[1];
+			}
+			
+			if (timeLimit == null && arg.matches("l=[1-9][0-9]*")) {
+				timeLimit = Integer.parseInt(arg.split("=")[1]);
 				continue;
-            }
-            
-            if (timeLimit == null && arg.matches("l=[1-9][0-9]*")) {
-            	timeLimit = Integer.parseInt(arg.split("=")[1]);
-				continue;
-            }
+			}
 		}
 		
 		HashMap<String, Object> params = new HashMap<String, Object>();
