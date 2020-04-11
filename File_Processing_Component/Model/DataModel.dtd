@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!ELEMENT Raum (ID, ecken, lampen?)>
+<!ELEMENT ID (#PCDATA)>
+<!ELEMENT ecken (Ecke*)>
+<!ELEMENT lampen (Lampe*)>
+<!ELEMENT Ecke (x, y)>
+<!ELEMENT Lampe (x, y)>
+<!ELEMENT x (#PCDATA)>
+<!ELEMENT y (#PCDATA)>
