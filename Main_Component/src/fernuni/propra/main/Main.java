@@ -1,7 +1,12 @@
 package fernuni.propra.main;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.jdom2.JDOMException;
+
+import fernuni.propra.file_processing.*;
 
 /**
  * Haupteinstiegspunkt der Anwendung.
@@ -24,11 +29,19 @@ public class Main {
 
 	/**
 	 * Haupteinstiegsfunktion
+	 * @throws IOException 
+	 * @throws JDOMException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws JDOMException, IOException {
 			
 		HashMap<String, Object> params = getParams(args);
 		System.out.println(params);
+		
+		String inputFile = (String) params.get("inputFile");
+		
+		XmlReader fileReader = new XmlReader(inputFile);
+		
+		
 	}
 		
 	public static HashMap<String, Object> getParams(String[] args) {
