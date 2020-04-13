@@ -39,9 +39,13 @@ public class Main {
 		
 		String inputFile = (String) params.get("inputFile");
 		
-		XmlReader fileReader = new XmlReader(inputFile);
+		XmlReader xmlReader = new XmlReader(inputFile);
+		Room room = xmlReader.createRoom();
 		
-		
+		System.out.println(room.getId());
+		System.out.println(room.getCorners());
+		System.out.println(room.getLamps());
+		System.out.println(room.getShape());
 	}
 		
 	public static HashMap<String, Object> getParams(String[] args) {

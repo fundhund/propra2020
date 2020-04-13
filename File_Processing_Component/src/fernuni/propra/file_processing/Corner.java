@@ -1,6 +1,8 @@
 package fernuni.propra.file_processing;
 
-public class Corner extends Point {
+import java.awt.geom.Point2D;
+
+public class Corner extends Point2D.Float {
 	
 	private float x;
 	private float y;

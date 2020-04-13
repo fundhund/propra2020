@@ -8,5 +8,6 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="src" path="/Algorithm_Component"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/File_Processing_Component"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -1,5 +1,6 @@
 package fernuni.propra.file_processing;
 
+import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,16 +14,12 @@ import org.jdom2.input.SAXBuilder;
 public class XmlReader {
 	
 	private String xmlPath;
-//	private Room room;
 	
 	public XmlReader(String xmlPath) throws JDOMException, IOException {
-		
 		this.xmlPath = xmlPath;
-		
-		this.createRoom();
 	}
 	
-	private void createRoom() throws JDOMException, IOException {
+	public Room createRoom() throws JDOMException, IOException {
 		
 		SAXBuilder builder = new SAXBuilder();
 		File xmlFile = new File(xmlPath);
@@ -30,42 +27,30 @@ public class XmlReader {
 		Element root = jdomDoc.getRootElement();
 		
 		String id = getId(root);
-		List<Corner> corners = getCorners(root);
+		List<Point2D.Float> corners = getPoints(root, "ecken");
+		List<Point2D.Float> lamps = getPoints(root, "lampen");
 		
-		
-		System.out.println(corners);
-		
-		System.out.println(id);
+		return new Room(id, corners, lamps);
 	}
 	
 	private String getId(Element root) {
 		return root.getChildText("ID");
 	}
 	
-	private List<Corner> getCorners(Element root) {
-		List<Corner> corners = new ArrayList<>();
-		List<Element> cornerElements = root.getChild("ecken").getChildren();
-
-		cornerElements.stream().forEach(cornerElement -> {
-			float x = Float.parseFloat(cornerElement.getChildText("x"));
-			float y = Float.parseFloat(cornerElement.getChildText("y"));
-			corners.add(new Corner(x, y));
-		});
+	private List<Point2D.Float> getPoints(Element root, String type) {
+		List<Point2D.Float> points = new ArrayList<>();
 		
-		return corners;
-	}
-	
-	private List<Lamp> getLamps(Element root) {
-		List<Lamp> lamps = new ArrayList<>();
-		List<Element> cornerElements = root.getChild("ecken").getChildren();
-
-		cornerElements.stream().forEach(cornerElement -> {
-			float x = Float.parseFloat(cornerElement.getChildText("x"));
-			float y = Float.parseFloat(cornerElement.getChildText("y"));
-			lamps.add(new Lamp(x, y));
-		});
+		Element parent = root.getChild(type);
+		if (parent != null) {
+			List<Element> pointElements = parent.getChildren();
+			
+			pointElements.stream().forEach(pointElement -> {
+				float x = Float.parseFloat(pointElement.getChildText("x"));
+				float y = Float.parseFloat(pointElement.getChildText("y"));
+				points.add(new Point2D.Float(x, y));
+			});
+		}
 		
-		return lamps;
+		return points;
 	}
-	
 }
