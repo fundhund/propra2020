@@ -19,7 +19,7 @@ public class XmlReader {
 		this.xmlPath = xmlPath;
 	}
 	
-	public Room createRoom() throws JDOMException, IOException {
+	public Room createRoom() throws JDOMException, IOException, IncorrectShapeException {
 		
 		SAXBuilder builder = new SAXBuilder();
 		File xmlFile = new File(xmlPath);

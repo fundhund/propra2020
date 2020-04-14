@@ -31,8 +31,9 @@ public class Main {
 	 * Haupteinstiegsfunktion
 	 * @throws IOException 
 	 * @throws JDOMException 
+	 * @throws IncorrectShapeException 
 	 */
-	public static void main(String[] args) throws JDOMException, IOException {
+	public static void main(String[] args) throws JDOMException, IOException, IncorrectShapeException {
 			
 		HashMap<String, Object> params = getParams(args);
 		System.out.println(params);
