@@ -2,6 +2,7 @@ package fernuni.propra.file_processing;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.awt.Point;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
@@ -83,10 +84,11 @@ public class Room {
 		
 		for (int i = 0; i < numberOfCorners; i++) {
 			
+			Point2D.Float previous = corners.get((i - 1 + numberOfCorners) % numberOfCorners);
 			Point2D.Float current = corners.get(i);
-			Point2D.Float next = corners.get((i + 1) % numberOfCorners);
+			Point2D.Float following = corners.get((i + 1) % numberOfCorners);
 			
-			if (!isLineParallelToAxes(current, next)) return false;
+			if (!isLineParallelToAxes(current, following) || hasStraightAngle(previous, current, following)) return false;
 		}
 		
 		return true;
@@ -104,14 +106,81 @@ public class Room {
 		return this.shape.contains(point);
 	}
 	
+	public boolean isHorizontalWall(Line2D.Float wall) {
+		return wall.y1 == wall.y2;
+	}
+	
+	public boolean isVerticalWall(Line2D.Float wall) {
+		return wall.x1 == wall.x2;
+	}
+	
+	public boolean isRoomWall(Line2D.Float wall) {
+		return this.walls.contains(wall);
+	}
+	
 	public boolean isNorthWall(Line2D.Float wall) {
-		if (!this.walls.contains(wall) || wall.y1 != wall.y2) return false;
+		return hasWallDirection(wall, Direction.NORTH);
+	}
+	
+	public boolean isSouthWall(Line2D.Float wall) {
+		return hasWallDirection(wall, Direction.SOUTH);
+	}
+	
+	public boolean isWestWall(Line2D.Float wall) {
+		return hasWallDirection(wall, Direction.WEST);
+	}
+	
+	public boolean isEastWall(Line2D.Float wall) {
+		return hasWallDirection(wall, Direction.EAST);
+	}
+	
+	public boolean hasWallDirection(Line2D.Float wall, Direction direction) {
 		
-		Point2D.Float testPoint = new Point2D.Float((wall.x1 + wall.x2) / 2, wall.y1 - 0.01f);
+		Orientation orientation = direction.getOrientation();
+		
+		if (!isRoomWall(wall) 
+				|| orientation.equals(Orientation.VERTICAL) && !isVerticalWall(wall)
+				|| orientation.equals(Orientation.HORIZONTAL) && !isHorizontalWall(wall)) {
+			return false;
+		}
+		
+		float testPointX = orientation.equals(Orientation.HORIZONTAL) 
+				?	((wall.x1 + wall.x2) / 2)
+				:	wall.x1 + 0.005f * (direction.equals(Direction.WEST) ? 1 : -1);
+		
+		float testPointY = orientation.equals(Orientation.VERTICAL) 
+				?	((wall.y1 + wall.y2) / 2)
+				:	wall.y1 + 0.005f * (direction.equals(Direction.SOUTH) ? 1 : -1); 
+		
+		Point2D.Float testPoint = new Point2D.Float(testPointX, testPointY);
 		return this.contains(testPoint);
 	}
 
 	public List<Line2D.Float> getWalls() {
 		return walls;
 	}
+	
+	public List<Line2D.Float> getDirectionWalls(Direction direction) {
+		return walls.stream()
+				.filter(wall -> hasWallDirection(wall, direction))
+				.collect(Collectors.toList());
+	}
+	
+	public List<Line2D.Float> getNorthWalls() {
+		return getDirectionWalls(Direction.NORTH);
+	}
+	
+	public List<Line2D.Float> getSouthWalls() {
+		return getDirectionWalls(Direction.SOUTH);
+	}
+	
+	public List<Line2D.Float> getWestWalls() {
+		return getDirectionWalls(Direction.WEST);
+	}
+	
+	public List<Line2D.Float> getEastWalls() {
+		return getDirectionWalls(Direction.EAST);
+	}
+	
+	
 }

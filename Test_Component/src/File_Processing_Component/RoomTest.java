@@ -190,5 +190,52 @@ public class RoomTest {
 		
 		// Assert
 		assertFalse("South wall recognized as north wall.", isSouthWallNorthWall);
+	}
+	
+	@Test
+	public void Room_IsSouthWall_ReturnsTrueForSouthWalls() throws IncorrectShapeException {
+		
+		// Arrange
+		String expectedId = "id";
+		List<Point2D.Float> corners = getCornersForSquare();
+		Room room = new Room(expectedId, corners);
+
+		// Act
+		boolean isSouthWallSouthWall = room.isSouthWall(room.getWalls().get(0));
+		
+		// Assert
+		assertTrue("South wall not recognized as south wall.", isSouthWallSouthWall);
+	}
+	
+	@Test
+	public void Room_IsSouthWall_ReturnsFalseForVerticalWalls() throws IncorrectShapeException {
+		
+		// Arrange
+		String expectedId = "id";
+		List<Point2D.Float> corners = getCornersForSquare();
+		Room room = new Room(expectedId, corners);
+
+		// Act
+		boolean isEastWallSouthWall = room.isSouthWall(room.getWalls().get(1));
+		boolean isWestWallSouthWall = room.isSouthWall(room.getWalls().get(3));
+		
+		// Assert
+		assertFalse("East wall recognized as south wall.", isEastWallSouthWall);
+		assertFalse("West wall recognized as south wall.", isWestWallSouthWall);
+	}
+	
+	@Test
+	public void Room_IsSouthWall_ReturnsFalseForNorthWalls() throws IncorrectShapeException {
+		
+		// Arrange
+		String expectedId = "id";
+		List<Point2D.Float> corners = getCornersForSquare();
+		Room room = new Room(expectedId, corners);
+
+		// Act
+		boolean isNorthWallSouthWall = room.isSouthWall(room.getWalls().get(2));
+		
+		// Assert
+		assertFalse("North wall recognized as south wall.", isNorthWallSouthWall);
 	} 
 }
