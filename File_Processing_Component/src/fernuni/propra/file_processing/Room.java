@@ -3,6 +3,7 @@ package fernuni.propra.file_processing;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.awt.Point;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
@@ -182,5 +183,46 @@ public class Room {
 		return getDirectionWalls(Direction.EAST);
 	}
 	
+	public List<Line2D.Float> getVerticalWalls() {
+		return this.walls
+				.stream()
+				.filter(wall -> isVerticalWall(wall))
+				.collect(Collectors.toList());
+	}
+	
+	public List<Line2D.Float> getHorizontalWalls() {
+		return this.walls
+				.stream()
+				.filter(wall -> isHorizontalWall(wall))
+				.collect(Collectors.toList());
+	}
+	
+	public List<java.lang.Float> getIntervalCoordinatesX() {
+		return getVerticalWalls()
+				.stream()
+				.map(wall -> wall.x1)
+				.distinct()
+				.sorted()
+				.collect(Collectors.toList());
+	}
+	
+	public List<java.lang.Float> getIntervalCoordinatesY() {
+		return getHorizontalWalls()
+				.stream()
+				.map(wall -> wall.y1)
+				.distinct()
+				.sorted()
+				.collect(Collectors.toList());
+	}
+	
+//	public List<Line2D.Float> getNearestSouthWall(Line2D.Float northWall) {
+//		if (!isNorthWall(northWall)) return null;
+//		
+//		List<Line2D.Float> southWalls = getSouthWalls()
+//				.stream()
+//				.filter(southWall -> isWallBetween);
+//		
+//		
+//	}
 	
 }

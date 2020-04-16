@@ -2,9 +2,12 @@ package File_Processing_Component;
 
 import fernuni.propra.file_processing.IncorrectShapeException;
 import fernuni.propra.file_processing.Room;
+
+import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Float;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.Test;
@@ -26,7 +29,7 @@ public class RoomTest {
 	}
 	
 	@Test
-	public void Room_Constructor_GeneratesRoomWithIdAnsCornersAndLamps() throws IncorrectShapeException {
+	public void Room_constructor_GeneratesRoomWithIdAnsCornersAndLamps() throws IncorrectShapeException {
 		
 		// Arrange
 		String expectedId = "id";
@@ -48,7 +51,7 @@ public class RoomTest {
 	}
 	
 	@Test
-	public void Room_Constructor_GeneratesRoomWithIdAnsCorners() throws IncorrectShapeException {
+	public void Room_constructor_GeneratesRoomWithIdAnsCorners() throws IncorrectShapeException {
 		
 		// Arrange
 		String expectedId = "id";
@@ -70,7 +73,7 @@ public class RoomTest {
 	}
 	
 	@Test
-	public void Room_Constructor_ThrowsExceptionForNonRectilinearWall() throws IncorrectShapeException {
+	public void Room_constructor_ThrowsExceptionForNonRectilinearWall() throws IncorrectShapeException {
 		
 		// Arrange
 		String expectedId = "id";
@@ -85,7 +88,7 @@ public class RoomTest {
 	}
 	
 	@Test
-	public void Room_Constructor_ThrowsExceptionForNonRectilinearLineBetweenLastAndFirstPoint() throws IncorrectShapeException {
+	public void Room_constructor_ThrowsExceptionForNonRectilinearLineBetweenLastAndFirstPoint() throws IncorrectShapeException {
 		
 		// Arrange
 		String expectedId = "id";
@@ -100,7 +103,7 @@ public class RoomTest {
 	}
 	
 	@Test
-	public void Room_Constructor_ThrowsExceptionForLessThanFourPoints() throws IncorrectShapeException {
+	public void Room_constructor_ThrowsExceptionForLessThanFourPoints() throws IncorrectShapeException {
 		
 		// Arrange
 		String expectedId = "id";
@@ -114,7 +117,7 @@ public class RoomTest {
 	}
 	
 	@Test
-	public void Room_Contains_ReturnsTrueForPointInsideOfRoom() throws IncorrectShapeException {
+	public void Room_contains_ReturnsTrueForPointInsideOfRoom() throws IncorrectShapeException {
 		
 		// Arrange
 		String expectedId = "id";
@@ -130,7 +133,7 @@ public class RoomTest {
 	}
 	
 	@Test
-	public void Room_Contains_ReturnsFalseForPointOutsideOfRoom() throws IncorrectShapeException {
+	public void Room_contains_ReturnsFalseForPointOutsideOfRoom() throws IncorrectShapeException {
 		
 		// Arrange
 		String expectedId = "id";
@@ -146,7 +149,7 @@ public class RoomTest {
 	}
 	
 	@Test
-	public void Room_IsNorthWall_ReturnsTrueForNorthWalls() throws IncorrectShapeException {
+	public void Room_isNorthWall_ReturnsTrueForNorthWalls() throws IncorrectShapeException {
 		
 		// Arrange
 		String expectedId = "id";
@@ -161,7 +164,7 @@ public class RoomTest {
 	}
 	
 	@Test
-	public void Room_IsNorthWall_ReturnsFalseForVerticalWalls() throws IncorrectShapeException {
+	public void Room_isNorthWall_ReturnsFalseForVerticalWalls() throws IncorrectShapeException {
 		
 		// Arrange
 		String expectedId = "id";
@@ -178,7 +181,7 @@ public class RoomTest {
 	}
 	
 	@Test
-	public void Room_IsNorthWall_ReturnsFalseForSouthWalls() throws IncorrectShapeException {
+	public void Room_isNorthWall_ReturnsFalseForSouthWalls() throws IncorrectShapeException {
 		
 		// Arrange
 		String expectedId = "id";
@@ -193,7 +196,7 @@ public class RoomTest {
 	}
 	
 	@Test
-	public void Room_IsSouthWall_ReturnsTrueForSouthWalls() throws IncorrectShapeException {
+	public void Room_isSouthWall_ReturnsTrueForSouthWalls() throws IncorrectShapeException {
 		
 		// Arrange
 		String expectedId = "id";
@@ -208,7 +211,7 @@ public class RoomTest {
 	}
 	
 	@Test
-	public void Room_IsSouthWall_ReturnsFalseForVerticalWalls() throws IncorrectShapeException {
+	public void Room_isSouthWall_ReturnsFalseForVerticalWalls() throws IncorrectShapeException {
 		
 		// Arrange
 		String expectedId = "id";
@@ -225,7 +228,7 @@ public class RoomTest {
 	}
 	
 	@Test
-	public void Room_IsSouthWall_ReturnsFalseForNorthWalls() throws IncorrectShapeException {
+	public void Room_isSouthWall_ReturnsFalseForNorthWalls() throws IncorrectShapeException {
 		
 		// Arrange
 		String expectedId = "id";
@@ -237,5 +240,215 @@ public class RoomTest {
 		
 		// Assert
 		assertFalse("North wall recognized as south wall.", isNorthWallSouthWall);
+	} 
+	
+	@Test
+	public void Room_isWestWall_ReturnsTrueForWestWalls() throws IncorrectShapeException {
+		
+		// Arrange
+		String expectedId = "id";
+		List<Point2D.Float> corners = getCornersForSquare();
+		Room room = new Room(expectedId, corners);
+
+		// Act
+		boolean isWestWallWestWall = room.isWestWall(room.getWalls().get(3));
+		
+		// Assert
+		assertTrue("West wall not recognized as west wall.", isWestWallWestWall);
+	}
+	
+	@Test
+	public void Room_isWestWall_ReturnsFalseForHorizontalWalls() throws IncorrectShapeException {
+		
+		// Arrange
+		String expectedId = "id";
+		List<Point2D.Float> corners = getCornersForSquare();
+		Room room = new Room(expectedId, corners);
+
+		// Act
+		boolean isNorthWallWestWall = room.isWestWall(room.getWalls().get(2));
+		boolean isSouthWallWestWall = room.isWestWall(room.getWalls().get(0));
+		
+		// Assert
+		assertFalse("North wall recognized as west wall.", isNorthWallWestWall);
+		assertFalse("South wall recognized as west wall.", isSouthWallWestWall);
+	}
+	
+	@Test
+	public void Room_isWestWall_ReturnsFalseForEastWalls() throws IncorrectShapeException {
+		
+		// Arrange
+		String expectedId = "id";
+		List<Point2D.Float> corners = getCornersForSquare();
+		Room room = new Room(expectedId, corners);
+
+		// Act
+		boolean isEastWallWestWall = room.isWestWall(room.getWalls().get(1));
+		
+		// Assert
+		assertFalse("East wall recognized as west wall.", isEastWallWestWall);
+	}
+	
+	@Test
+	public void Room_isEastWall_ReturnsTrueForEastWalls() throws IncorrectShapeException {
+		
+		// Arrange
+		String expectedId = "id";
+		List<Point2D.Float> corners = getCornersForSquare();
+		Room room = new Room(expectedId, corners);
+
+		// Act
+		boolean isEastWallEastWall = room.isEastWall(room.getWalls().get(1));
+		
+		// Assert
+		assertTrue("East wall not recognized as east wall.", isEastWallEastWall);
+	}
+	
+	@Test
+	public void Room_isEastWall_ReturnsFalseForHorizontalWalls() throws IncorrectShapeException {
+		
+		// Arrange
+		String expectedId = "id";
+		List<Point2D.Float> corners = getCornersForSquare();
+		Room room = new Room(expectedId, corners);
+
+		// Act
+		boolean isNorthWallEastWall = room.isEastWall(room.getWalls().get(2));
+		boolean isSouthWallEastWall = room.isEastWall(room.getWalls().get(0));
+		
+		// Assert
+		assertFalse("North wall recognized as east wall.", isNorthWallEastWall);
+		assertFalse("South wall recognized as east wall.", isSouthWallEastWall);
+	}
+	
+	@Test
+	public void Room_isEastWall_ReturnsFalseForWestWalls() throws IncorrectShapeException {
+		
+		// Arrange
+		String expectedId = "id";
+		List<Point2D.Float> corners = getCornersForSquare();
+		Room room = new Room(expectedId, corners);
+
+		// Act
+		boolean isWestWallEastWall = room.isEastWall(room.getWalls().get(3));
+		
+		// Assert
+		assertFalse("West wall recognized as east wall.", isWestWallEastWall);
+	}
+	
+	@Test
+	public void Room_getVerticalWalls_ReturnsVerticalWalls() throws IncorrectShapeException {
+		
+		// Arrange
+		String expectedId = "id";
+		List<Point2D.Float> corners = getCornersForSquare();
+		Room room = new Room(expectedId, corners);
+		
+		List<Line2D.Float> expectedVerticalWalls = new ArrayList<>();
+		expectedVerticalWalls.add(room.getWalls().get(1));
+		expectedVerticalWalls.add(room.getWalls().get(3));
+
+		// Act
+		List<Line2D.Float> actualVerticalWalls = room.getVerticalWalls();
+		
+		// Assert
+		assertEquals("Did not return vertical walls.", expectedVerticalWalls, actualVerticalWalls);
+	}
+	
+	@Test
+	public void Room_getHorizontalWalls_ReturnsHorizontalWalls() throws IncorrectShapeException {
+		
+		// Arrange
+		String expectedId = "id";
+		List<Point2D.Float> corners = getCornersForSquare();
+		Room room = new Room(expectedId, corners);
+		
+		List<Line2D.Float> expectedHorizontalWalls = new ArrayList<>();
+		expectedHorizontalWalls.add(room.getWalls().get(0));
+		expectedHorizontalWalls.add(room.getWalls().get(2));
+
+		// Act
+		List<Line2D.Float> actualHorizontalWalls = room.getHorizontalWalls();
+		
+		// Assert
+		assertEquals("Did not return horizontal walls.", expectedHorizontalWalls, actualHorizontalWalls);
+	}
+	
+	@Test
+	public void Room_getIntervalCoordinatesX_ReturnsCorrectXValues() throws IncorrectShapeException {
+		
+		// Arrange
+		String expectedId = "id";
+		List<Point2D.Float> corners = getCornersForSquare();
+		Room room = new Room(expectedId, corners);
+		
+		List<java.lang.Float> expectedXs = new ArrayList<>();
+		expectedXs.add(0.0f);
+		expectedXs.add(2.0f);
+
+		// Act
+		List<java.lang.Float> actualXs = room.getIntervalCoordinatesX();
+		
+		// Assert
+		assertEquals("Did not return correct interval values.", expectedXs, actualXs);
+	}
+	
+	@Test
+	public void Room_getIntervalCoordinatesX_SortsXValues() throws IncorrectShapeException {
+		
+		// Arrange
+		String expectedId = "id";
+		List<Point2D.Float> corners = getCornersForSquare();
+		Collections.reverse(corners);
+		Room room = new Room(expectedId, corners);
+		
+		List<java.lang.Float> expectedXs = new ArrayList<>();
+		expectedXs.add(0.0f);
+		expectedXs.add(2.0f);
+
+		// Act
+		List<java.lang.Float> actualXs = room.getIntervalCoordinatesX();
+		
+		// Assert
+		assertEquals("Did not sort interval values.", expectedXs, actualXs);
+	}
+	
+	@Test
+	public void Room_getIntervalCoordinatesY_ReturnsCorrectYValues() throws IncorrectShapeException {
+		
+		// Arrange
+		String expectedId = "id";
+		List<Point2D.Float> corners = getCornersForSquare();
+		Room room = new Room(expectedId, corners);
+		
+		List<java.lang.Float> expectedYs = new ArrayList<>();
+		expectedYs.add(0.0f);
+		expectedYs.add(2.0f);
+
+		// Act
+		List<java.lang.Float> actualYs = room.getIntervalCoordinatesY();
+		
+		// Assert
+		assertEquals("Did not return correct interval values.", expectedYs, actualYs);
+	}
+	
+	@Test
+	public void Room_getIntervalCoordinatesY_SortsYValues() throws IncorrectShapeException {
+		
+		// Arrange
+		String expectedId = "id";
+		List<Point2D.Float> corners = getCornersForSquare();
+		Collections.reverse(corners);
+		Room room = new Room(expectedId, corners);
+		
+		List<java.lang.Float> expectedYs = new ArrayList<>();
+		expectedYs.add(0.0f);
+		expectedYs.add(2.0f);
+
+		// Act
+		List<java.lang.Float> actualYs = room.getIntervalCoordinatesY();
+		
+		// Assert
+		assertEquals("Did not sort interval values.", expectedYs, actualYs);
 	} 
 }
