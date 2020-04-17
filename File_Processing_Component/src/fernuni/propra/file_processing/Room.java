@@ -2,6 +2,8 @@ package fernuni.propra.file_processing;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.awt.Point;
@@ -198,31 +200,48 @@ public class Room {
 	}
 	
 	public List<java.lang.Float> getIntervalCoordinatesX() {
-		return getVerticalWalls()
-				.stream()
-				.map(wall -> wall.x1)
-				.distinct()
-				.sorted()
-				.collect(Collectors.toList());
+		return getIntervalCoordinates(Orientation.HORIZONTAL);
 	}
 	
 	public List<java.lang.Float> getIntervalCoordinatesY() {
+		return getIntervalCoordinates(Orientation.VERTICAL);
+	}
+	
+	public List<java.lang.Float> getIntervalCoordinates(Orientation orientation) {
+		Function<Line2D.Float, java.lang.Float> mapToCoordinate = 
+				orientation == Orientation.HORIZONTAL
+					? wall -> wall.x1 
+					: wall -> wall.y1; 
+		
 		return getHorizontalWalls()
 				.stream()
-				.map(wall -> wall.y1)
+				.map(mapToCoordinate)
 				.distinct()
 				.sorted()
 				.collect(Collectors.toList());
 	}
 	
-//	public List<Line2D.Float> getNearestSouthWall(Line2D.Float northWall) {
-//		if (!isNorthWall(northWall)) return null;
-//		
-//		List<Line2D.Float> southWalls = getSouthWalls()
-//				.stream()
-//				.filter(southWall -> isWallBetween);
-//		
-//		
+	public List<java.lang.Float> getIntervalCoordinates(Line2D.Float wall) {
+		if (isVerticalWall(wall)) return getIntervalCoordinates(wall, Orientation.VERTICAL);
+		if (isHorizontalWall(wall)) return getIntervalCoordinates(wall, Orientation.HORIZONTAL);
+		return null;
+	}
+	
+	private List<java.lang.Float> getIntervalCoordinates(Line2D.Float wall, Orientation orientation) {
+		float c1 = orientation == Orientation.HORIZONTAL ? wall.x1 : wall.y1;
+		float c2 = orientation == Orientation.HORIZONTAL ? wall.x2 : wall.y2;
+		
+		Predicate<? super java.lang.Float> isInWallRange = c -> c >= Math.min(c1, c2) && c <= Math.max(c1, c2);
+		
+		return getIntervalCoordinates(orientation)
+				.stream()
+				.filter(isInWallRange)
+				.collect(Collectors.toList());
+	}
+	
+//	public List<Line2D.Float> getWallSections(Line2D.Float wall) {
 //	}
 	
+//	public List<Line2D.Float> getNearestSouthWall(Line2D.Float northWall) {
+//	}
 }

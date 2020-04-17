@@ -450,5 +450,33 @@ public class RoomTest {
 		
 		// Assert
 		assertEquals("Did not sort interval values.", expectedYs, actualYs);
+	}
+	
+	@Test
+	public void Room_getIntervalCoordinates_ReturnsCorrectXValuesForHorizontalWall() throws IncorrectShapeException {
+		
+		// Arrange
+		String id = "id";
+		List<Point2D.Float> corners = new ArrayList<>();
+		corners.add(new Point2D.Float(0.0f, 0.0f));
+		corners.add(new Point2D.Float(2.0f, 0.0f));
+		corners.add(new Point2D.Float(2.0f, 1.0f));
+		corners.add(new Point2D.Float(1.0f, 1.0f));
+		corners.add(new Point2D.Float(1.0f, 2.0f));
+		corners.add(new Point2D.Float(0.0f, 2.0f));
+		Room room = new Room(id, corners);
+		
+		List<java.lang.Float> expectedXs = new ArrayList<>();
+		expectedXs.add(0.0f);
+		expectedXs.add(1.0f);
+		expectedXs.add(2.0f);
+		
+		Line2D.Float wall = room.getWalls().get(0);
+
+		// Act
+		List<java.lang.Float> actualXs = room.getIntervalCoordinates(wall);
+		
+		// Assert
+		assertEquals("Did not return correct X coordinates.", expectedXs, actualXs);
 	} 
 }
