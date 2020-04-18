@@ -1,16 +1,14 @@
 package fernuni.propra.file_processing;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.awt.Point;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
-import java.awt.geom.Point2D.Float;
 
 public class Room {
 	
@@ -19,6 +17,7 @@ public class Room {
 	private List<Point2D.Float> lamps;
 	private Path2D.Float shape;
 	private List<Line2D.Float> walls;
+	private HashMap<Orientation, List<java.lang.Float>> intervals;
 
 	public Room(String id, List<Point2D.Float> corners, List<Point2D.Float> lamps) throws IncorrectShapeException {
 		
@@ -31,6 +30,7 @@ public class Room {
 		
 		this.shape = createShape();
 		this.walls = createWalls();
+		this.intervals = createIntervals();
 	}
 	
 	public Room(String id, List<Point2D.Float> corners) throws IncorrectShapeException {
@@ -199,15 +199,45 @@ public class Room {
 				.collect(Collectors.toList());
 	}
 	
-	public List<java.lang.Float> getIntervalCoordinatesX() {
-		return getIntervalCoordinates(Orientation.HORIZONTAL);
+	public List<java.lang.Float> getIntervalX() {
+		return getIntervals(Orientation.HORIZONTAL);
 	}
 	
-	public List<java.lang.Float> getIntervalCoordinatesY() {
-		return getIntervalCoordinates(Orientation.VERTICAL);
+	public List<java.lang.Float> getIntervalsY() {
+		return getIntervals(Orientation.VERTICAL);
 	}
 	
-	public List<java.lang.Float> getIntervalCoordinates(Orientation orientation) {
+	public List<java.lang.Float> getIntervals(Orientation orientation) {
+		return this.intervals.get(orientation);
+	}
+	
+	public List<java.lang.Float> getIntervals(Line2D.Float wall) {
+		if (isVerticalWall(wall)) return getIntervals(wall, Orientation.VERTICAL);
+		if (isHorizontalWall(wall)) return getIntervals(wall, Orientation.HORIZONTAL);
+		return null;
+	}
+	
+	private List<java.lang.Float> getIntervals(Line2D.Float wall, Orientation orientation) {
+		float c1 = orientation == Orientation.HORIZONTAL ? wall.x1 : wall.y1;
+		float c2 = orientation == Orientation.HORIZONTAL ? wall.x2 : wall.y2;
+		
+		Predicate<? super java.lang.Float> isInWallRange = c -> c >= Math.min(c1, c2) && c <= Math.max(c1, c2);
+		
+		return getIntervals(orientation)
+				.stream()
+				.filter(isInWallRange)
+				.collect(Collectors.toList());
+	}
+	
+	private HashMap<Orientation, List<java.lang.Float>> createIntervals() {
+		HashMap<Orientation, List<java.lang.Float>> intervals = new HashMap<>();
+		for (Orientation o : Orientation.values()) {
+			intervals.put(o, createIntervals(o));
+		}
+		return intervals;
+	}
+	
+	private List<java.lang.Float> createIntervals(Orientation orientation) {
 		Function<Line2D.Float, java.lang.Float> mapToCoordinate = 
 				orientation == Orientation.HORIZONTAL
 					? wall -> wall.x1 
@@ -221,26 +251,46 @@ public class Room {
 				.collect(Collectors.toList());
 	}
 	
-	public List<java.lang.Float> getIntervalCoordinates(Line2D.Float wall) {
-		if (isVerticalWall(wall)) return getIntervalCoordinates(wall, Orientation.VERTICAL);
-		if (isHorizontalWall(wall)) return getIntervalCoordinates(wall, Orientation.HORIZONTAL);
+	public List<Line2D.Float> getWallSections(Line2D.Float wall) {
+		if (isVerticalWall(wall)) return getWallSections(wall, Orientation.VERTICAL);
+		if (isHorizontalWall(wall)) return getWallSections(wall, Orientation.HORIZONTAL);
 		return null;
 	}
 	
-	private List<java.lang.Float> getIntervalCoordinates(Line2D.Float wall, Orientation orientation) {
-		float c1 = orientation == Orientation.HORIZONTAL ? wall.x1 : wall.y1;
-		float c2 = orientation == Orientation.HORIZONTAL ? wall.x2 : wall.y2;
+	public List<Line2D.Float> getWallSections(Line2D.Float wall, Orientation orientation) {
 		
-		Predicate<? super java.lang.Float> isInWallRange = c -> c >= Math.min(c1, c2) && c <= Math.max(c1, c2);
+		List<Line2D.Float> wallSections = new ArrayList<>(); 
+		List<java.lang.Float> intervals = getIntervals(wall, orientation);
 		
-		return getIntervalCoordinates(orientation)
-				.stream()
-				.filter(isInWallRange)
-				.collect(Collectors.toList());
+		if (orientation == Orientation.HORIZONTAL) {
+			
+			float y = wall.y1;
+			
+			List<Point2D.Float> points = intervals
+					.stream()
+					.map(x -> new Point2D.Float(x, y))
+					.collect(Collectors.toList());
+			
+			for (int i = 0; i < intervals.size() - 1; i++) {
+				wallSections.add(new Line2D.Float(points.get(i), points.get(i+1)));
+			}
+			
+		} else {
+
+			float x = wall.x1;
+			
+			List<Point2D.Float> points = intervals
+					.stream()
+					.map(y -> new Point2D.Float(x, y))
+					.collect(Collectors.toList());
+			
+			for (int i = 0; i < intervals.size() - 1; i++) {
+				wallSections.add(new Line2D.Float(points.get(i), points.get(i+1)));
+			}
+		}
+		
+		return wallSections;
 	}
-	
-//	public List<Line2D.Float> getWallSections(Line2D.Float wall) {
-//	}
 	
 //	public List<Line2D.Float> getNearestSouthWall(Line2D.Float northWall) {
 //	}

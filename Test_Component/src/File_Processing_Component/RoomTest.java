@@ -28,6 +28,36 @@ public class RoomTest {
 		return getCornersForSquare(2.0f);
 	}
 	
+	private List<Point2D.Float> getCornersForLShape(float sideLength) {
+		List<Point2D.Float> corners = new ArrayList<>();
+		corners.add(new Point2D.Float(0.0f, 0.0f));
+		corners.add(new Point2D.Float(sideLength, 0.0f));
+		corners.add(new Point2D.Float(sideLength, sideLength/2));
+		corners.add(new Point2D.Float(sideLength/2, sideLength/2));
+		corners.add(new Point2D.Float(sideLength/2, sideLength));
+		corners.add(new Point2D.Float(0.0f, sideLength));
+		return corners;
+	}
+	
+	private List<Point2D.Float> getCornersForLShape()  {
+		return getCornersForLShape(2.0f);
+	}
+	
+	private boolean containEqualLines(List<Line2D.Float> lines1, List<Line2D.Float> lines2) {
+		if (lines1.size() != lines2.size()) return false;
+		
+		for (int i = 0; i < lines1.size(); i++) {
+			
+			Line2D.Float line1 = lines1.get(i);
+			Line2D.Float line2 = lines2.get(i);
+
+			if (!line1.getP1().equals(line2.getP1())
+					|| !line1.getP2().equals(line2.getP2())) return false;
+		}
+		
+		return true;
+	}
+	
 	@Test
 	public void Room_constructor_GeneratesRoomWithIdAnsCornersAndLamps() throws IncorrectShapeException {
 		
@@ -375,7 +405,7 @@ public class RoomTest {
 	}
 	
 	@Test
-	public void Room_getIntervalCoordinatesX_ReturnsCorrectXValues() throws IncorrectShapeException {
+	public void Room_getIntervalsX_ReturnsCorrectXValues() throws IncorrectShapeException {
 		
 		// Arrange
 		String expectedId = "id";
@@ -387,14 +417,14 @@ public class RoomTest {
 		expectedXs.add(2.0f);
 
 		// Act
-		List<java.lang.Float> actualXs = room.getIntervalCoordinatesX();
+		List<java.lang.Float> actualXs = room.getIntervalX();
 		
 		// Assert
 		assertEquals("Did not return correct interval values.", expectedXs, actualXs);
 	}
 	
 	@Test
-	public void Room_getIntervalCoordinatesX_SortsXValues() throws IncorrectShapeException {
+	public void Room_getIntervalsX_SortsXValues() throws IncorrectShapeException {
 		
 		// Arrange
 		String expectedId = "id";
@@ -407,14 +437,14 @@ public class RoomTest {
 		expectedXs.add(2.0f);
 
 		// Act
-		List<java.lang.Float> actualXs = room.getIntervalCoordinatesX();
+		List<java.lang.Float> actualXs = room.getIntervalX();
 		
 		// Assert
 		assertEquals("Did not sort interval values.", expectedXs, actualXs);
 	}
 	
 	@Test
-	public void Room_getIntervalCoordinatesY_ReturnsCorrectYValues() throws IncorrectShapeException {
+	public void Room_getIntervalsY_ReturnsCorrectYValues() throws IncorrectShapeException {
 		
 		// Arrange
 		String expectedId = "id";
@@ -426,14 +456,14 @@ public class RoomTest {
 		expectedYs.add(2.0f);
 
 		// Act
-		List<java.lang.Float> actualYs = room.getIntervalCoordinatesY();
+		List<java.lang.Float> actualYs = room.getIntervalsY();
 		
 		// Assert
 		assertEquals("Did not return correct interval values.", expectedYs, actualYs);
 	}
 	
 	@Test
-	public void Room_getIntervalCoordinatesY_SortsYValues() throws IncorrectShapeException {
+	public void Room_getIntervalsY_SortsYValues() throws IncorrectShapeException {
 		
 		// Arrange
 		String expectedId = "id";
@@ -446,24 +476,18 @@ public class RoomTest {
 		expectedYs.add(2.0f);
 
 		// Act
-		List<java.lang.Float> actualYs = room.getIntervalCoordinatesY();
+		List<java.lang.Float> actualYs = room.getIntervalsY();
 		
 		// Assert
 		assertEquals("Did not sort interval values.", expectedYs, actualYs);
 	}
 	
 	@Test
-	public void Room_getIntervalCoordinates_ReturnsCorrectXValuesForHorizontalWall() throws IncorrectShapeException {
+	public void Room_getIntervals_ReturnsCorrectXValuesForHorizontalWall() throws IncorrectShapeException {
 		
 		// Arrange
 		String id = "id";
-		List<Point2D.Float> corners = new ArrayList<>();
-		corners.add(new Point2D.Float(0.0f, 0.0f));
-		corners.add(new Point2D.Float(2.0f, 0.0f));
-		corners.add(new Point2D.Float(2.0f, 1.0f));
-		corners.add(new Point2D.Float(1.0f, 1.0f));
-		corners.add(new Point2D.Float(1.0f, 2.0f));
-		corners.add(new Point2D.Float(0.0f, 2.0f));
+		List<Point2D.Float> corners = getCornersForLShape();
 		Room room = new Room(id, corners);
 		
 		List<java.lang.Float> expectedXs = new ArrayList<>();
@@ -474,9 +498,61 @@ public class RoomTest {
 		Line2D.Float wall = room.getWalls().get(0);
 
 		// Act
-		List<java.lang.Float> actualXs = room.getIntervalCoordinates(wall);
+		List<java.lang.Float> actualXs = room.getIntervals(wall);
 		
 		// Assert
 		assertEquals("Did not return correct X coordinates.", expectedXs, actualXs);
+	}
+	
+	@Test
+	public void Room_getWallSections_ReturnsCorrectSectionsForHorizontalWall() throws IncorrectShapeException {
+		
+		// Arrange
+		String id = "id";
+		List<Point2D.Float> corners = getCornersForLShape();
+		Room room = new Room(id, corners);
+		
+		List<Point2D.Float> points = new ArrayList<>();
+		points.add(new Point2D.Float(0.0f, 0.0f));
+		points.add(new Point2D.Float(1.0f, 0.0f));
+		points.add(new Point2D.Float(2.0f, 0.0f));
+		
+		List<Line2D.Float> expectedSections = new ArrayList<>();
+		expectedSections.add(new Line2D.Float(points.get(0), points.get(1)));
+		expectedSections.add(new Line2D.Float(points.get(1), points.get(2)));
+		
+		Line2D.Float wall = room.getWalls().get(0);
+
+		// Act
+		List<Line2D.Float> actualSections = room.getWallSections(wall);
+		
+		// Assert
+		assertTrue("Did not return correct wall sections.", containEqualLines(expectedSections, actualSections));
+	} 
+	
+	@Test
+	public void Room_getWallSections_ReturnsCorrectSectionsForVerticalWall() throws IncorrectShapeException {
+		
+		// Arrange
+		String id = "id";
+		List<Point2D.Float> corners = getCornersForLShape();
+		Room room = new Room(id, corners);
+		
+		List<Point2D.Float> points = new ArrayList<>();
+		points.add(new Point2D.Float(0.0f, 0.0f));
+		points.add(new Point2D.Float(0.0f, 1.0f));
+		points.add(new Point2D.Float(0.0f, 2.0f));
+		
+		List<Line2D.Float> expectedSections = new ArrayList<>();
+		expectedSections.add(new Line2D.Float(points.get(0), points.get(1)));
+		expectedSections.add(new Line2D.Float(points.get(1), points.get(2)));
+		
+		Line2D.Float wall = room.getWalls().get(5);
+
+		// Act
+		List<Line2D.Float> actualSections = room.getWallSections(wall);
+		
+		// Assert
+		assertTrue("Did not return correct wall sections.", containEqualLines(expectedSections, actualSections));
 	} 
 }
