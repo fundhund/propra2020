@@ -7,6 +7,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.awt.geom.Line2D;
+import java.awt.geom.Line2D.Float;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 
@@ -17,6 +18,7 @@ public class Room {
 	private List<Point2D.Float> lamps;
 	private Path2D.Float shape;
 	private List<Line2D.Float> walls;
+	private HashMap<Direction, List<Line2D.Float>> wallsByDirection;
 	private HashMap<Orientation, List<java.lang.Float>> intervals;
 
 	public Room(String id, List<Point2D.Float> corners, List<Point2D.Float> lamps) throws IncorrectShapeException {
@@ -30,6 +32,7 @@ public class Room {
 		
 		this.shape = createShape();
 		this.walls = createWalls();
+		this.wallsByDirection = createWallsByDirection();
 		this.intervals = createIntervals();
 	}
 	
@@ -82,6 +85,20 @@ public class Room {
 		return walls;
 	}
 	
+	private HashMap<Direction, List<Line2D.Float>> createWallsByDirection() {
+		HashMap<Direction, List<Line2D.Float>> wallsByDirection = new HashMap<>();
+		
+		for (Direction direction : Direction.values()) {
+			wallsByDirection.put(direction, new ArrayList<>());
+		}
+		
+		for (Line2D.Float wall : walls) {
+			wallsByDirection.get(getDirection(wall)).add(wall);
+		}
+		
+		return wallsByDirection;
+	}
+	
 	private boolean isRectilinear(List<Point2D.Float> corners) {
 		int numberOfCorners = corners.size();
 		
@@ -110,79 +127,95 @@ public class Room {
 	}
 	
 	public boolean isHorizontalWall(Line2D.Float wall) {
-		return wall.y1 == wall.y2;
+		return getOrientation(wall).equals(Orientation.HORIZONTAL);
 	}
 	
 	public boolean isVerticalWall(Line2D.Float wall) {
-		return wall.x1 == wall.x2;
+		return getOrientation(wall).equals(Orientation.VERTICAL);
+	}
+	
+	public Orientation getOrientation(Line2D.Float wall) {
+		if (wall.y1 == wall.y2) return Orientation.HORIZONTAL;
+		if (wall.x1 == wall.x2) return Orientation.VERTICAL;
+		return null;
 	}
 	
 	public boolean isRoomWall(Line2D.Float wall) {
-		return this.walls.contains(wall);
+		return getWalls().contains(wall);
 	}
 	
 	public boolean isNorthWall(Line2D.Float wall) {
-		return hasWallDirection(wall, Direction.NORTH);
+		return getDirection(wall).equals(Direction.NORTH);
 	}
 	
 	public boolean isSouthWall(Line2D.Float wall) {
-		return hasWallDirection(wall, Direction.SOUTH);
+		return getDirection(wall).equals(Direction.SOUTH);
 	}
 	
 	public boolean isWestWall(Line2D.Float wall) {
-		return hasWallDirection(wall, Direction.WEST);
+		return getDirection(wall).equals(Direction.WEST);
 	}
 	
 	public boolean isEastWall(Line2D.Float wall) {
-		return hasWallDirection(wall, Direction.EAST);
+		return getDirection(wall).equals(Direction.EAST);
 	}
 	
 	public boolean hasWallDirection(Line2D.Float wall, Direction direction) {
+		return getDirection(wall).equals(direction);
+	}
+	
+	public Direction getDirection(Line2D.Float wall) {
+		if (!isRoomWall(wall)) return null;
 		
-		Orientation orientation = direction.getOrientation();
-		
-		if (!isRoomWall(wall) 
-				|| orientation.equals(Orientation.VERTICAL) && !isVerticalWall(wall)
-				|| orientation.equals(Orientation.HORIZONTAL) && !isHorizontalWall(wall)) {
-			return false;
+		if (getOrientation(wall).equals(Orientation.HORIZONTAL)) {
+			float x = ((wall.x1 + wall.x2) / 2);
+			
+			float yNorthOfWall = wall.y1 + 0.005f;
+			if (contains(new Point2D.Float(x, yNorthOfWall))) return Direction.SOUTH;
+			
+			float ySouthOfWall = wall.y1 - 0.005f;
+			if (contains(new Point2D.Float(x, ySouthOfWall))) return Direction.NORTH;
+			
+			return null;
 		}
 		
-		float testPointX = orientation.equals(Orientation.HORIZONTAL) 
-				?	((wall.x1 + wall.x2) / 2)
-				:	wall.x1 + 0.005f * (direction.equals(Direction.WEST) ? 1 : -1);
+		if (getOrientation(wall).equals(Orientation.VERTICAL)) {
+			float y = ((wall.y1 + wall.y2) / 2);
+			
+			float xEastOfWall = wall.x1 + 0.005f;
+			if (contains(new Point2D.Float(xEastOfWall, y))) return Direction.WEST;
+			
+			float xWestOfWall = wall.x1 - 0.005f;
+			if (contains(new Point2D.Float(xWestOfWall, y))) return Direction.EAST;
+			
+			return null;
+		}
 		
-		float testPointY = orientation.equals(Orientation.VERTICAL) 
-				?	((wall.y1 + wall.y2) / 2)
-				:	wall.y1 + 0.005f * (direction.equals(Direction.SOUTH) ? 1 : -1); 
-		
-		Point2D.Float testPoint = new Point2D.Float(testPointX, testPointY);
-		return this.contains(testPoint);
+		return null;
 	}
 
 	public List<Line2D.Float> getWalls() {
 		return walls;
 	}
 	
-	public List<Line2D.Float> getDirectionWalls(Direction direction) {
-		return walls.stream()
-				.filter(wall -> hasWallDirection(wall, direction))
-				.collect(Collectors.toList());
+	public List<Line2D.Float> getWalls(Direction direction) {
+		return wallsByDirection.get(direction);
 	}
 	
 	public List<Line2D.Float> getNorthWalls() {
-		return getDirectionWalls(Direction.NORTH);
+		return getWalls(Direction.NORTH);
 	}
 	
 	public List<Line2D.Float> getSouthWalls() {
-		return getDirectionWalls(Direction.SOUTH);
+		return getWalls(Direction.SOUTH);
 	}
 	
 	public List<Line2D.Float> getWestWalls() {
-		return getDirectionWalls(Direction.WEST);
+		return getWalls(Direction.WEST);
 	}
 	
 	public List<Line2D.Float> getEastWalls() {
-		return getDirectionWalls(Direction.EAST);
+		return getWalls(Direction.EAST);
 	}
 	
 	public List<Line2D.Float> getVerticalWalls() {
@@ -238,17 +271,19 @@ public class Room {
 	}
 	
 	private List<java.lang.Float> createIntervals(Orientation orientation) {
-		Function<Line2D.Float, java.lang.Float> mapToCoordinate = 
-				orientation == Orientation.HORIZONTAL
-					? wall -> wall.x1 
-					: wall -> wall.y1; 
+		Function<Point2D.Float, java.lang.Float> mapToCoordinate = 
+			orientation == Orientation.HORIZONTAL
+				? point -> point.x
+				: point -> point.y;
 		
-		return getHorizontalWalls()
+		List<java.lang.Float> intervals = this.corners
 				.stream()
 				.map(mapToCoordinate)
 				.distinct()
 				.sorted()
 				.collect(Collectors.toList());
+		
+		return intervals;
 	}
 	
 	public List<Line2D.Float> getWallSections(Line2D.Float wall) {
@@ -292,6 +327,26 @@ public class Room {
 		return wallSections;
 	}
 	
-//	public List<Line2D.Float> getNearestSouthWall(Line2D.Float northWall) {
-//	}
+	public float getDistanceToNearestSouthWall(Point2D.Float point) {
+		Line2D.Float nearestSouthWall = getNearestSouthWall(point);
+		float distance = point.y - nearestSouthWall.y1;
+		return distance;
+	}
+
+	private Line2D.Float getNearestSouthWall(Point2D.Float point) {
+		
+		Predicate<? super Line2D.Float> isSouthOfPoint = 
+				wall -> wall.y1 <= point.y
+					&& Math.min(wall.x1, wall.x2) <= point.x
+					&& Math.max(wall.x1, wall.x2) > point.x;
+		
+		Line2D.Float nearestSouthWall = this.getWalls(Direction.SOUTH)
+			.stream()
+			.filter(isSouthOfPoint)
+			.sorted((w1, w2) -> w1.y1 > w2.y1 ? 1 : -1 )
+			.collect(Collectors.toList())
+			.get(0);
+		
+		return nearestSouthWall;
+	}
 }
