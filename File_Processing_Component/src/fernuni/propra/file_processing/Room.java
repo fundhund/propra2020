@@ -165,7 +165,6 @@ public class Room {
 	}
 	
 	public Direction getDirection(Line2D.Float wall) {
-		if (!isRoomWall(wall)) return null;
 		
 		if (getOrientation(wall).equals(Orientation.HORIZONTAL)) {
 			float x = ((wall.x1 + wall.x2) / 2);
@@ -349,4 +348,108 @@ public class Room {
 		
 		return nearestSouthWall;
 	}
+	
+//	public Line2D.Float getExtendedNorthWall(Line2D.Float wall) {
+//		
+//		float y1 = wall.y1;
+//		float y2 = wall.y2;
+//		float x1 = getNearestWestWall(wall);
+//		float x2 = getNearestEastWall(wall);
+//		
+//		Point2D.Float p1 = new Point2D.Float(x1, y1);
+//		Point2D.Float p2 = new Point2D.Float(x2, y2);
+//		Line2D.Float extendedWall = new Line2D.Float(p1, p2);
+//	}
+
+	public Line2D.Float getNearestWall(Line2D.Float wall, Direction nearestWallDirection) {
+		
+		Direction startWallDirection = getDirection(wall);
+		if (startWallDirection.equals(nearestWallDirection)) return wall;
+		
+		Line2D.Float nearestWall;
+		
+		if (startWallDirection.getOpposite().equals(nearestWallDirection)) {
+			
+			if (startWallDirection.equals(Direction.NORTH)) {
+				
+				float xMin = Math.min(wall.x1, wall.x2);
+				float xMax = Math.max(wall.x1, wall.x2);
+				
+				nearestWall = getWalls(nearestWallDirection)
+						.stream()
+						.filter(c -> c.y1 <= wall.y1)
+						.filter(c -> Math.max(c.x1, c.x2) > xMin && Math.min(c.x1, c.x2) < xMax)
+						.sorted((c1, c2) -> c1.y1 < c2.y1 ? 1 : -1 )
+						.collect(Collectors.toList())
+						.get(0);
+				
+				return nearestWall;
+				
+			} else if (startWallDirection.equals(Direction.SOUTH)) {
+				
+				float xMin = Math.min(wall.x1, wall.x2);
+				float xMax = Math.max(wall.x1, wall.x2);
+				
+				nearestWall = getWalls(nearestWallDirection)
+						.stream()
+						.filter(c -> c.y1 >= wall.y1)
+						.filter(c -> Math.max(c.x1, c.x2) > xMin && Math.min(c.x1, c.x2) < xMax)
+						.sorted((c1, c2) -> c1.y1 > c2.y1 ? 1 : -1 )
+						.collect(Collectors.toList())
+						.get(0);
+				
+				return nearestWall;
+			} else if (startWallDirection.equals(Direction.WEST)) {
+				
+				float yMin = Math.min(wall.y1, wall.y2);
+				float yMax = Math.max(wall.y1, wall.y2);
+				
+				nearestWall = getWalls(nearestWallDirection)
+						.stream()
+						.filter(c -> c.x1 >= wall.x1)
+						.filter(c -> Math.max(c.y1, c.y2) > yMin && Math.min(c.y1, c.y2) < yMax)
+						.sorted((c1, c2) -> c1.x1 > c2.x1 ? 1 : -1 )
+						.collect(Collectors.toList())
+						.get(0);
+				
+				return nearestWall;
+				
+			} else if (startWallDirection.equals(Direction.EAST)) {
+				
+				float yMin = Math.min(wall.y1, wall.y2);
+				float yMax = Math.max(wall.y1, wall.y2);
+				
+				nearestWall = getWalls(nearestWallDirection)
+						.stream()
+						.filter(c -> c.y1 >= wall.y1)
+						.filter(c -> Math.max(c.y1, c.y2) > yMin && Math.min(c.y1, c.y2) < yMax)
+						.sorted((c1, c2) -> c1.x1 < c2.x1 ? 1 : -1 )
+						.collect(Collectors.toList())
+						.get(0);
+				
+				return nearestWall;
+			}
+		}
+		
+//		float x = Math.min(wall.x1, wall.x2);
+//		float y = wall.y1;
+//		
+//		
+//		List<Line2D.Float> candidates = getWalls(nearestWallDirection);
+//
+//		
+//		Predicate<? super Line2D.Float> intersectsExtendedWall;
+//		
+//		switch(startWallDirection) {
+//		
+//		}
+//		
+//		= 
+//				candidate -> candidate.x1 <= x
+//					&& Math.max(candidate.y1, candidate.y2) >= y
+//					&& Math.min(candidate.y1, candidate.y2) < y;
+		return null;
+	}
+	
+	
 }
