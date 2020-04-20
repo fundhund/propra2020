@@ -78,6 +78,27 @@ public class RoomTest {
 		return getCornersForZShape(1.0f);
 	}
 	
+	private List<Point2D.Float> getCornersForPlusShape(float unit) {
+		List<Point2D.Float> corners = new ArrayList<>();
+		corners.add(new Point2D.Float(unit, 0.0f));
+		corners.add(new Point2D.Float(2 * unit, 0.0f));
+		corners.add(new Point2D.Float(2 * unit, unit));
+		corners.add(new Point2D.Float(3 * unit, unit));
+		corners.add(new Point2D.Float(3 * unit, 2 * unit));
+		corners.add(new Point2D.Float(2 * unit, 2 * unit));
+		corners.add(new Point2D.Float(2 * unit, 3 * unit));
+		corners.add(new Point2D.Float(1 * unit, 3 * unit));
+		corners.add(new Point2D.Float(1 * unit, 2 * unit));
+		corners.add(new Point2D.Float(0.0f, 2 * unit));
+		corners.add(new Point2D.Float(0.0f, unit));
+		corners.add(new Point2D.Float(unit, unit));
+		return corners;
+	}
+	
+	private List<Point2D.Float> getCornersForPlusShape()  {
+		return getCornersForPlusShape(1.0f);
+	}
+	
 	private boolean containEqualLines(List<Line2D.Float> lines1, List<Line2D.Float> lines2) {
 		if (lines1.size() != lines2.size()) return false;
 		
@@ -654,7 +675,7 @@ public class RoomTest {
 	}
 	
 	@Test
-	public void Room_getNearestWall_ReturnsCorrectWallIfDirectionIsOppositeDriectionFromWall() throws IncorrectShapeException {
+	public void Room_getNearestWall_ReturnsCorrectWallIfDirectionIsOppositeDirectionFromWall() throws IncorrectShapeException {
 		
 		// Arrange
 		String id = "id";
@@ -678,10 +699,105 @@ public class RoomTest {
 		Line2D.Float actualNearestWallSouth = room.getNearestWall(southWall, Direction.NORTH);
 		Line2D.Float actualNearestWallWest = room.getNearestWall(westWall, Direction.EAST);
 		
+		System.out.println("expected: " + expectedNearestWallEast.getP1() + " " + expectedNearestWallEast.getP2());
+		System.out.println("actual: " + actualNearestWallEast.getP1() + " " + actualNearestWallEast.getP2());
+		
 		// Assert
 		assertEquals("Did not return correct nearest wall.", expectedNearestWallNorth, actualNearestWallNorth);
 		assertEquals("Did not return correct nearest wall.", expectedNearestWallEast, actualNearestWallEast);
 		assertEquals("Did not return correct nearest wall.", expectedNearestWallSouth, actualNearestWallSouth);
 		assertEquals("Did not return correct nearest wall.", expectedNearestWallWest, actualNearestWallWest);
+	}
+	
+	@Test
+	public void Room_getNearestWall_ReturnsCorrectWestWallForHorizontalWalls() throws IncorrectShapeException {
+		
+		// Arrange
+		String id = "id";
+		List<Point2D.Float> corners = getCornersForPlusShape();
+		Room room = new Room(id, corners);
+		List<Line2D.Float> walls = room.getWalls();
+		
+		Line2D.Float northWall = walls.get(4);
+		Line2D.Float southWall = walls.get(2);
+		
+		Line2D.Float expectedNearestWestWall = walls.get(9);
+
+		// Act
+		Line2D.Float actualNearestWestWallNorth = room.getNearestWall(northWall, Direction.WEST);
+		Line2D.Float actualNearestWestWallSouth = room.getNearestWall(southWall, Direction.WEST);
+		
+		// Assert
+		assertEquals("Did not return nearest west wall.", expectedNearestWestWall, actualNearestWestWallNorth);
+		assertEquals("Did not return nearest west wall.", expectedNearestWestWall, actualNearestWestWallSouth);
+	}
+	
+	@Test
+	public void Room_getNearestWall_ReturnsCorrectEastWallForHorizontalWalls() throws IncorrectShapeException {
+		
+		// Arrange
+		String id = "id";
+		List<Point2D.Float> corners = getCornersForPlusShape();
+		Room room = new Room(id, corners);
+		List<Line2D.Float> walls = room.getWalls();
+		
+		Line2D.Float northWall = walls.get(8);
+		Line2D.Float southWall = walls.get(10);
+		
+		Line2D.Float expectedNearestEastWall = walls.get(3);
+
+		// Act
+		Line2D.Float actualNearestEastWallNorth = room.getNearestWall(northWall, Direction.EAST);
+		Line2D.Float actualNearestEastWallSouth = room.getNearestWall(southWall, Direction.EAST);
+		
+		// Assert
+		assertEquals("Did not return nearest east wall.", expectedNearestEastWall, actualNearestEastWallNorth);
+		assertEquals("Did not return nearest east wall.", expectedNearestEastWall, actualNearestEastWallSouth);
+	}
+	
+	@Test
+	public void Room_getNearestWall_ReturnsCorrectNorthWallForVerticalWalls() throws IncorrectShapeException {
+		
+		// Arrange
+		String id = "id";
+		List<Point2D.Float> corners = getCornersForPlusShape();
+		Room room = new Room(id, corners);
+		List<Line2D.Float> walls = room.getWalls();
+		
+		Line2D.Float westWall = walls.get(11);
+		Line2D.Float eastWall = walls.get(1);
+		
+		Line2D.Float expectedNearestNorthWall = walls.get(6);
+
+		// Act
+		Line2D.Float actualNearestNorthWallWest = room.getNearestWall(westWall, Direction.NORTH);
+		Line2D.Float actualNearestNorthWallEast = room.getNearestWall(eastWall, Direction.NORTH);
+		
+		// Assert
+		assertEquals("Did not return nearest north wall.", expectedNearestNorthWall, actualNearestNorthWallWest);
+		assertEquals("Did not return nearest north wall.", expectedNearestNorthWall, actualNearestNorthWallEast);
+	}
+	
+	@Test
+	public void Room_getNearestWall_ReturnsCorrectSouthWallForVerticalWalls() throws IncorrectShapeException {
+		
+		// Arrange
+		String id = "id";
+		List<Point2D.Float> corners = getCornersForPlusShape();
+		Room room = new Room(id, corners);
+		List<Line2D.Float> walls = room.getWalls();
+		
+		Line2D.Float westWall = walls.get(7);
+		Line2D.Float eastWall = walls.get(5);
+		
+		Line2D.Float expectedNearestSouthWall = walls.get(0);
+
+		// Act
+		Line2D.Float actualNearestSouthWallWest = room.getNearestWall(westWall, Direction.SOUTH);
+		Line2D.Float actualNearestSouthWallEast = room.getNearestWall(eastWall, Direction.SOUTH);
+		
+		// Assert
+		assertEquals("Did not return nearest south wall.", expectedNearestSouthWall, actualNearestSouthWallWest);
+		assertEquals("Did not return nearest south wall.", expectedNearestSouthWall, actualNearestSouthWallEast);
 	}
 }

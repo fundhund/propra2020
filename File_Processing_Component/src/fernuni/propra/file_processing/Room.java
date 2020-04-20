@@ -1,8 +1,10 @@
 package fernuni.propra.file_processing;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -364,92 +366,122 @@ public class Room {
 	public Line2D.Float getNearestWall(Line2D.Float wall, Direction nearestWallDirection) {
 		
 		Direction startWallDirection = getDirection(wall);
-		if (startWallDirection.equals(nearestWallDirection)) return wall;
 		
-		Line2D.Float nearestWall;
+		if (startWallDirection.equals(nearestWallDirection)) {
+			return wall;
+		}
+		
+		Predicate<? super Line2D.Float> isOnCorrectSide = getIsOnCorrectSide(wall, nearestWallDirection);
+		Comparator<? super Line2D.Float> sortByDistance = getSortByDistance(nearestWallDirection);
 		
 		if (startWallDirection.getOpposite().equals(nearestWallDirection)) {
 			
-			if (startWallDirection.equals(Direction.NORTH)) {
-				
-				float xMin = Math.min(wall.x1, wall.x2);
-				float xMax = Math.max(wall.x1, wall.x2);
-				
-				nearestWall = getWalls(nearestWallDirection)
-						.stream()
-						.filter(c -> c.y1 <= wall.y1)
-						.filter(c -> Math.max(c.x1, c.x2) > xMin && Math.min(c.x1, c.x2) < xMax)
-						.sorted((c1, c2) -> c1.y1 < c2.y1 ? 1 : -1 )
-						.collect(Collectors.toList())
-						.get(0);
-				
-				return nearestWall;
-				
-			} else if (startWallDirection.equals(Direction.SOUTH)) {
-				
-				float xMin = Math.min(wall.x1, wall.x2);
-				float xMax = Math.max(wall.x1, wall.x2);
-				
-				nearestWall = getWalls(nearestWallDirection)
-						.stream()
-						.filter(c -> c.y1 >= wall.y1)
-						.filter(c -> Math.max(c.x1, c.x2) > xMin && Math.min(c.x1, c.x2) < xMax)
-						.sorted((c1, c2) -> c1.y1 > c2.y1 ? 1 : -1 )
-						.collect(Collectors.toList())
-						.get(0);
-				
-				return nearestWall;
-			} else if (startWallDirection.equals(Direction.WEST)) {
-				
-				float yMin = Math.min(wall.y1, wall.y2);
-				float yMax = Math.max(wall.y1, wall.y2);
-				
-				nearestWall = getWalls(nearestWallDirection)
-						.stream()
-						.filter(c -> c.x1 >= wall.x1)
-						.filter(c -> Math.max(c.y1, c.y2) > yMin && Math.min(c.y1, c.y2) < yMax)
-						.sorted((c1, c2) -> c1.x1 > c2.x1 ? 1 : -1 )
-						.collect(Collectors.toList())
-						.get(0);
-				
-				return nearestWall;
-				
-			} else if (startWallDirection.equals(Direction.EAST)) {
-				
-				float yMin = Math.min(wall.y1, wall.y2);
-				float yMax = Math.max(wall.y1, wall.y2);
-				
-				nearestWall = getWalls(nearestWallDirection)
-						.stream()
-						.filter(c -> c.y1 >= wall.y1)
-						.filter(c -> Math.max(c.y1, c.y2) > yMin && Math.min(c.y1, c.y2) < yMax)
-						.sorted((c1, c2) -> c1.x1 < c2.x1 ? 1 : -1 )
-						.collect(Collectors.toList())
-						.get(0);
-				
-				return nearestWall;
-			}
+			Predicate<? super Line2D.Float> overlapsWall = getOverlapsWall(wall);
+			
+			Line2D.Float nearestWall = getWalls(nearestWallDirection)
+				.stream()
+				.filter(isOnCorrectSide)
+				.filter(overlapsWall)
+				.sorted(sortByDistance)
+				.collect(Collectors.toList())
+				.get(0);
+		
+			return nearestWall;
 		}
 		
-//		float x = Math.min(wall.x1, wall.x2);
-//		float y = wall.y1;
-//		
-//		
-//		List<Line2D.Float> candidates = getWalls(nearestWallDirection);
-//
-//		
-//		Predicate<? super Line2D.Float> intersectsExtendedWall;
-//		
-//		switch(startWallDirection) {
-//		
-//		}
-//		
-//		= 
-//				candidate -> candidate.x1 <= x
-//					&& Math.max(candidate.y1, candidate.y2) >= y
-//					&& Math.min(candidate.y1, candidate.y2) < y;
-		return null;
+		Predicate<? super Line2D.Float> intersectsExtension = getIntersectsExtension(wall); 
+
+		Line2D.Float nearestWall = getWalls(nearestWallDirection)
+				.stream()
+				.filter(isOnCorrectSide)
+				.filter(intersectsExtension)
+				.sorted(sortByDistance)
+				.collect(Collectors.toList())
+				.get(0);
+		
+		return nearestWall;
 	}
 	
+	private Predicate<? super Line2D.Float> getIsOnCorrectSide(Line2D.Float wall, Direction nearestWallDirection) {
+		
+		switch(nearestWallDirection) {
+			case NORTH:
+				float yMax = Math.max(wall.y1, wall.y2);
+				return c -> c.y1 >= yMax;
+			case EAST:
+				float xMax = Math.max(wall.x1, wall.x2);
+				return c -> c.x1 >= xMax;
+			case SOUTH:
+				float yMin = Math.min(wall.y1, wall.y2);
+				return c -> c.y1 <= yMin;
+			case WEST:
+				float xMin = Math.min(wall.x1, wall.x2);
+				return c -> c.x1 <= xMin;
+			default:
+				return null;
+		}
+	}
 	
+	private Predicate<? super Line2D.Float> getOverlapsWall(Line2D.Float wall) {
+		
+		Orientation orientation = getOrientation(wall);
+		
+		switch(orientation) {
+		
+			case HORIZONTAL:
+				
+				float xMin = Math.min(wall.x1, wall.x2);
+				float xMax = Math.max(wall.x1, wall.x2);
+				
+				return c -> 
+					Math.min(c.x1, c.x2) > xMin && Math.min(c.x1, c.x2) < xMax
+						|| Math.max(c.x1, c.x2) > xMin && Math.max(c.x1, c.x2) < xMax;
+						
+			case VERTICAL:
+				
+				float yMin = Math.min(wall.y1, wall.y2);
+				float yMay = Math.max(wall.y1, wall.y2);
+				
+				return c -> 
+					Math.min(c.y1, c.y2) > yMin && Math.min(c.y1, c.y2) < yMay
+						|| Math.max(c.y1, c.y2) > yMin && Math.max(c.y1, c.y2) < yMay;
+						
+			default:
+				return null;
+		}
+	}
+	
+	private Predicate<? super Line2D.Float> getIntersectsExtension(Line2D.Float wall) {
+		
+		Direction direction = getDirection(wall);
+		
+		switch(direction) {
+			case NORTH:
+				return c -> Math.max(c.y1,  c.y2) >= wall.y1 && Math.min(c.y1,  c.y2) < wall.y1;
+			case EAST:
+				return c -> Math.max(c.x1,  c.x2) >= wall.x1 && Math.min(c.x1,  c.x2) < wall.x1;
+			case SOUTH:
+				return c -> Math.min(c.y1,  c.y2) <= wall.y1 && Math.max(c.y1,  c.y2) > wall.y1;
+			case WEST:
+				return c -> Math.min(c.x1,  c.x2) <= wall.x1 && Math.max(c.x1,  c.x2) > wall.x1;
+			default:
+				return null;
+		}
+	}
+	
+	private Comparator<? super Line2D.Float> getSortByDistance(Direction nearestWallDirection) {
+		
+		switch(nearestWallDirection) {
+			case NORTH:
+				return (c1, c2) -> c1.y1 > c2.y1 ? 1 : -1;
+			case EAST:
+				return (c1, c2) -> c1.x1 > c2.x1 ? 1 : -1;
+			case SOUTH:
+				return (c1, c2) -> c1.y1 < c2.y1 ? 1 : -1;
+			case WEST:
+				return (c1, c2) -> c1.x1 < c2.x1 ? 1 : -1;
+			default:
+				return null;
+		}
+	}
 }
