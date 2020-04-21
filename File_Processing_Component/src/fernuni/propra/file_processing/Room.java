@@ -12,6 +12,7 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Line2D.Float;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 
 public class Room {
 	
@@ -490,5 +491,46 @@ public class Room {
 			default:
 				return null;
 		}
+	}
+	
+	private Line2D.Float getOppositeWall(Line2D.Float wall) {
+		return getNearestWall(wall, getDirection(wall).getOpposite());
+	}
+	
+	private Rectangle2D.Float getRectangle(Line2D.Float wall) {
+		
+		Line2D.Float extendedWall = getExtendedWall(wall);
+		Line2D.Float oppositeWall = getOppositeWall(extendedWall);
+		
+		Direction direction = getDirection(wall);
+		
+		float x, y, w, h;
+		
+		switch(direction) {
+			case NORTH:
+				x = Math.min(extendedWall.x1, extendedWall.x2);
+				y = oppositeWall.y1;
+				w = Math.abs(extendedWall.x2 - extendedWall.x1);
+				h = Math.abs(oppositeWall.y1 - extendedWall.y1);
+			case EAST:
+				x = oppositeWall.x1;
+				y = Math.min(extendedWall.y1, extendedWall.y2);
+				w = Math.abs(extendedWall.x1 - oppositeWall.x1);
+				h = Math.abs(extendedWall.y2 - extendedWall.y1);
+			case SOUTH:
+				x = Math.min(extendedWall.x1, extendedWall.x2);
+				y = extendedWall.y1;
+				w = Math.abs(extendedWall.x2 - extendedWall.x1);
+				h = Math.abs(extendedWall.y1 - oppositeWall.y1);
+			case WEST:
+				x = extendedWall.x1;
+				y = Math.min(extendedWall.y1, extendedWall.y2);
+				w = Math.abs(extendedWall.x1 - oppositeWall.x1);
+				h = Math.abs(extendedWall.y2 - extendedWall.y1);
+			default:
+				x = y = w = h = 0;
+		}
+
+		return new Rectangle2D.Float(x, y, w, h);
 	}
 }
