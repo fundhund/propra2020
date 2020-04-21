@@ -351,17 +351,24 @@ public class Room {
 		return nearestSouthWall;
 	}
 	
-//	public Line2D.Float getExtendedNorthWall(Line2D.Float wall) {
-//		
-//		float y1 = wall.y1;
-//		float y2 = wall.y2;
-//		float x1 = getNearestWestWall(wall);
-//		float x2 = getNearestEastWall(wall);
-//		
-//		Point2D.Float p1 = new Point2D.Float(x1, y1);
-//		Point2D.Float p2 = new Point2D.Float(x2, y2);
-//		Line2D.Float extendedWall = new Line2D.Float(p1, p2);
-//	}
+	public Line2D.Float getExtendedWall(Line2D.Float wall) {
+		
+		float x1, x2, y1, y2;
+		
+		if (getOrientation(wall).equals(Orientation.HORIZONTAL)) {
+			x1 = getNearestWall(wall, Direction.WEST).x1;
+			x2 = getNearestWall(wall, Direction.EAST).x2;
+			y1 = wall.y1;
+			y2 = wall.y2;
+		} else {
+			x1 = wall.x1;
+			x2 = wall.x2;
+			y1 = getNearestWall(wall, Direction.SOUTH).y1;
+			y2 = getNearestWall(wall, Direction.NORTH).y2;
+		}
+		
+		return new Line2D.Float(x1, y1, x2, y2);
+	}
 
 	public Line2D.Float getNearestWall(Line2D.Float wall, Direction nearestWallDirection) {
 		
