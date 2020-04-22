@@ -372,8 +372,11 @@ public class Room {
 	}
 
 	public Line2D.Float getNearestWall(Line2D.Float wall, Direction nearestWallDirection) {
-		
 		Direction startWallDirection = getDirection(wall);
+		return getNearestWall(wall, startWallDirection, nearestWallDirection);
+	}
+	
+	public Line2D.Float getNearestWall(Line2D.Float wall, Direction startWallDirection, Direction nearestWallDirection) {
 		
 		if (startWallDirection.equals(nearestWallDirection)) {
 			return wall;
@@ -411,7 +414,6 @@ public class Room {
 	}
 	
 	private Predicate<? super Line2D.Float> getIsOnCorrectSide(Line2D.Float wall, Direction nearestWallDirection) {
-		
 		switch(nearestWallDirection) {
 			case NORTH:
 				float yMax = Math.max(wall.y1, wall.y2);
@@ -431,7 +433,6 @@ public class Room {
 	}
 	
 	private Predicate<? super Line2D.Float> getOverlapsWall(Line2D.Float wall) {
-		
 		Orientation orientation = getOrientation(wall);
 		
 		switch(orientation) {
@@ -442,17 +443,17 @@ public class Room {
 				float xMax = Math.max(wall.x1, wall.x2);
 				
 				return c -> 
-					Math.min(c.x1, c.x2) > xMin && Math.min(c.x1, c.x2) < xMax
-						|| Math.max(c.x1, c.x2) > xMin && Math.max(c.x1, c.x2) < xMax;
+					Math.max(c.x1, c.x2) >= xMax && Math.min(c.x1, c.x2) < xMax
+						|| Math.min(c.x1, c.x2) <= xMin && Math.max(c.x1, c.x2) > xMin;
 						
 			case VERTICAL:
 				
 				float yMin = Math.min(wall.y1, wall.y2);
-				float yMay = Math.max(wall.y1, wall.y2);
+				float yMax = Math.max(wall.y1, wall.y2);
 				
 				return c -> 
-					Math.min(c.y1, c.y2) > yMin && Math.min(c.y1, c.y2) < yMay
-						|| Math.max(c.y1, c.y2) > yMin && Math.max(c.y1, c.y2) < yMay;
+					Math.max(c.y1, c.y2) >= yMax && Math.min(c.y1, c.y2) < yMax
+						|| Math.min(c.y1, c.y2) <= yMin && Math.max(c.y1, c.y2) > yMin;
 						
 			default:
 				return null;
@@ -493,16 +494,17 @@ public class Room {
 		}
 	}
 	
-	private Line2D.Float getOppositeWall(Line2D.Float wall) {
+	public Line2D.Float getOppositeWall(Line2D.Float wall) {
 		return getNearestWall(wall, getDirection(wall).getOpposite());
 	}
 	
-	private Rectangle2D.Float getRectangle(Line2D.Float wall) {
-		
-		Line2D.Float extendedWall = getExtendedWall(wall);
-		Line2D.Float oppositeWall = getOppositeWall(extendedWall);
+	public Rectangle2D.Float getRectangle(Line2D.Float wall) {
 		
 		Direction direction = getDirection(wall);
+		Direction oppositeDirection = direction.getOpposite();
+
+		Line2D.Float extendedWall = getExtendedWall(wall);
+		Line2D.Float oppositeWall = getNearestWall(extendedWall, direction, oppositeDirection); //opposite wall ist null bei east (1)
 		
 		float x, y, w, h;
 		
@@ -512,23 +514,28 @@ public class Room {
 				y = oppositeWall.y1;
 				w = Math.abs(extendedWall.x2 - extendedWall.x1);
 				h = Math.abs(oppositeWall.y1 - extendedWall.y1);
+				break;
 			case EAST:
 				x = oppositeWall.x1;
 				y = Math.min(extendedWall.y1, extendedWall.y2);
 				w = Math.abs(extendedWall.x1 - oppositeWall.x1);
 				h = Math.abs(extendedWall.y2 - extendedWall.y1);
+				break;
 			case SOUTH:
 				x = Math.min(extendedWall.x1, extendedWall.x2);
 				y = extendedWall.y1;
 				w = Math.abs(extendedWall.x2 - extendedWall.x1);
 				h = Math.abs(extendedWall.y1 - oppositeWall.y1);
+				break;
 			case WEST:
 				x = extendedWall.x1;
 				y = Math.min(extendedWall.y1, extendedWall.y2);
 				w = Math.abs(extendedWall.x1 - oppositeWall.x1);
 				h = Math.abs(extendedWall.y2 - extendedWall.y1);
+				break;
 			default:
 				x = y = w = h = 0;
+				break;
 		}
 
 		return new Rectangle2D.Float(x, y, w, h);
