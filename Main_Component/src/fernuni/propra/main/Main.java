@@ -1,12 +1,12 @@
 package fernuni.propra.main;
 
+import java.awt.EventQueue;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map;
-
 import org.jdom2.JDOMException;
-
 import fernuni.propra.file_processing.*;
+import fernuni.propra.user_interface.UserInterface;
 
 /**
  * Haupteinstiegspunkt der Anwendung.
@@ -47,6 +47,18 @@ public class Main {
 		System.out.println(room.getCorners());
 		System.out.println(room.getLamps());
 		System.out.println(room.getShape());
+		
+		String mode = Arrays.stream(args)
+				.filter(arg -> arg.startsWith("r="))
+				.findFirst()
+				.get()
+				.split("=")[1];
+		
+		EventQueue.invokeLater(() -> {
+  		
+  		var ui = new UserInterface(mode, room);
+  		ui.setVisible(true);
+  	});
 	}
 		
 	public static HashMap<String, Object> getParams(String[] args) {
