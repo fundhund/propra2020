@@ -1,6 +1,7 @@
 package fernuni.propra.file_processing;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +24,9 @@ public class Room {
 	private List<Line2D.Float> walls;
 	private HashMap<Direction, List<Line2D.Float>> wallsByDirection;
 	private HashMap<Orientation, List<java.lang.Float>> intervals;
+	private HashMap<String, java.lang.Float> boundaries;
+	private float width;
+	private float height;
 
 	public Room(String id, List<Point2D.Float> corners, List<Point2D.Float> lamps) throws IncorrectShapeException {
 		
@@ -37,10 +41,51 @@ public class Room {
 		this.walls = createWalls();
 		this.wallsByDirection = createWallsByDirection();
 		this.intervals = createIntervals();
+		this.boundaries = createBoundaries();
+		this.width = calculateWidth();
+		this.height = calculateHeight();
 	}
 	
+	public HashMap<String, java.lang.Float> getBoundaries() {
+		return boundaries;
+	}
+
+	public float getWidth() {
+		return width;
+	}
+
+	public float getHeight() {
+		return height;
+	}
+
 	public Room(String id, List<Point2D.Float> corners) throws IncorrectShapeException {
 		this(id, corners, new ArrayList<Point2D.Float>());
+	}
+	
+	private HashMap<String, java.lang.Float> createBoundaries() {
+		HashMap<String, java.lang.Float> boundaries = new HashMap<>();
+		
+		float xMin = this.corners.stream().map(point -> point.x).sorted().findFirst().get();
+		float xMax = this.corners.stream().map(point -> point.x).sorted(Collections.reverseOrder()).findFirst().get();
+		float yMin = this.corners.stream().map(point -> point.y).sorted().findFirst().get();
+		float yMax = this.corners.stream().map(point -> point.y).sorted(Collections.reverseOrder()).findFirst().get();
+				
+		boundaries.put("xMin", xMin);
+		boundaries.put("xMax", xMax);
+		boundaries.put("yMin", yMin);
+		boundaries.put("yMax", yMax);
+		
+		System.out.println(this.boundaries);
+		
+		return boundaries;
+	}
+	
+	private float calculateWidth() {
+		return boundaries.get("xMax") - boundaries.get("xMin");
+	}
+	
+	private float calculateHeight() {
+		return boundaries.get("yMax") - boundaries.get("yMin");
 	}
 
 	public Path2D.Float getShape() {
