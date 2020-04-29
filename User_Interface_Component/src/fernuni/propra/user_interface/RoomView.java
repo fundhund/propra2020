@@ -4,8 +4,11 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Shape;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
+import java.awt.geom.Arc2D;
+import java.awt.geom.Line2D.Float;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.swing.JPanel;
@@ -70,8 +73,21 @@ public class RoomView extends JPanel {
 		path.closePath();
 		
 		g2.fill(path);
-		
 		g2.draw(path);
+	}
+	
+	private void drawLamps(Graphics g) {
+
+		Graphics2D g2 = (Graphics2D)g;
+		g2.setPaint(Color.RED);
+		
+		room.getLamps()
+			.stream()
+			.forEach(point -> {
+				Shape lamp = new Arc2D.Float(point.x - offsetX + margin, point.y - offsetY + margin, 5, 5, 0, 360, Arc2D.CHORD);
+				g2.fill(lamp);
+				g2.draw(lamp);
+			});
 	}
 	
 	@Override
@@ -79,6 +95,7 @@ public class RoomView extends JPanel {
 		
 		super.paintComponent(g);
 		drawRoom(g);
+		drawLamps(g);
 	    
 	}
 }
