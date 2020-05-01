@@ -8,7 +8,7 @@ import java.awt.Shape;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Arc2D;
-import java.awt.geom.Line2D.Float;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.swing.JPanel;
@@ -16,9 +16,6 @@ import fernuni.propra.file_processing.Room;
 
 public class RoomView extends JPanel {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private Room room;
 	private List<Point2D.Float> convertedCorners;
@@ -26,18 +23,30 @@ public class RoomView extends JPanel {
 	private float offsetX;
 	private float offsetY;
 	private int margin = 40;
+	private float windowMin;
+	private float scale;
+	private List<Shape> lampShapes;
+	private Path2D.Float roomShape;
 	
 	public RoomView(Room room) {
+		this(room, 600);
+	}
+	
+	public RoomView(Room room, float windowMin) {
 		super();
 		this.room = room;
+		this.windowMin = windowMin - 100;
 		this.offsetX = room.getBoundaries().get("xMin");
 		this.offsetY = room.getBoundaries().get("yMin");
+		this.scale = calculateScale();
 		this.convertedCorners = createConvertedCorners();
 		this.convertedLamps = createConvertedLamps();
+		this.lampShapes = createLampShapes();
+		this.roomShape = createRoomShape();
 		
 		setBackground(Color.BLACK);
-		int width = (int) Math.ceil(room.getWidth() + 2 * margin);
-		int height = (int) Math.ceil(room.getHeight() + 2 * margin);
+		int width = (int) Math.ceil((room.getWidth() + 2 * margin) * scale);
+		int height = (int) Math.ceil((room.getHeight() + 2 * margin) * scale);
     setPreferredSize(new Dimension(width, height));
 	}
 	
@@ -54,37 +63,51 @@ public class RoomView extends JPanel {
 	private List<Point2D.Float> createConvertedPoints(List<Point2D.Float> points) {
 		List<Point2D.Float> convertedPoints = points
 				.stream()
-				.map(point -> new Point2D.Float(point.x - offsetX + margin, point.y - offsetY + margin))
+				.map(point -> new Point2D.Float(
+						(point.x - offsetX + margin) * scale, 
+						(point.y - offsetY + margin) * scale))
 				.collect(Collectors.toList());
 		
 		return convertedPoints;
 	}
 	
-	
 	private void drawRoom(Graphics g) {
-
 		Graphics2D g2 = (Graphics2D) g;
     g2.setPaint(Color.WHITE);
-		
+		g2.fill(roomShape);
+		g2.draw(roomShape);
+	}
+	
+	private Path2D.Float createRoomShape() {
 		Path2D.Float path = new Path2D.Float();
-		
 		path.moveTo(convertedCorners.get(0).x, convertedCorners.get(0).y);
 		convertedCorners.stream().forEach(point -> path.lineTo(point.x, point.y));
 		path.closePath();
 		
-		g2.fill(path);
-		g2.draw(path);
+		return path;
+	}
+	
+	private List<Shape> createLampShapes() {
+		return convertedLamps
+			.stream()
+			.map(point -> new Arc2D.Float(
+				point.x,
+				point.y,
+				5,
+				5,
+				0,
+				360,
+				Arc2D.CHORD))
+			.collect(Collectors.toList());
 	}
 	
 	private void drawLamps(Graphics g) {
-
 		Graphics2D g2 = (Graphics2D)g;
 		g2.setPaint(Color.RED);
 		
-		room.getLamps()
+		lampShapes
 			.stream()
-			.forEach(point -> {
-				Shape lamp = new Arc2D.Float(point.x - offsetX + margin, point.y - offsetY + margin, 5, 5, 0, 360, Arc2D.CHORD);
+			.forEach(lamp -> {
 				g2.fill(lamp);
 				g2.draw(lamp);
 			});
@@ -92,10 +115,18 @@ public class RoomView extends JPanel {
 	
 	@Override
 	public void paintComponent(Graphics g) {
-		
 		super.paintComponent(g);
 		drawRoom(g);
 		drawLamps(g);
-	    
+	}
+	
+	public void redraw(float windowMin) {
+		removeAll();
+	}
+	
+	private float calculateScale() {
+		HashMap<String, java.lang.Float> boundaries = room.getBoundaries();
+		float coordinateMax = Math.max(boundaries.get("xMax"), boundaries.get("yMax"));
+		return windowMin/coordinateMax;
 	}
 }

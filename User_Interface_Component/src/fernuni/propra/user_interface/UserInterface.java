@@ -1,9 +1,13 @@
 package fernuni.propra.user_interface;
 
 import java.awt.Color;
+import java.awt.Container;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import fernuni.propra.file_processing.Room;
 
@@ -32,13 +36,25 @@ public class UserInterface extends JFrame {
 		String title = createTitle();
 		var icon = new ImageIcon("src/light.png");
 		
-		var roomView = new RoomView(this.room);
+		var roomView = new RoomView(this.room, 600);
     add(roomView);
+    
+    this.addComponentListener(new ComponentAdapter( ) {
+      public void componentResized(ComponentEvent ev) {
+      	float windowMin = Math.min(getWidth(), getHeight());
+      	Container contentPane = getContentPane();
+      	contentPane.removeAll();
+      	JPanel newRoomView = new RoomView(room, windowMin);
+      	contentPane.add(newRoomView);
+      	setVisible(true);
+      	invalidate();
+      	repaint();
+      }
+    });
 
     setTitle(title);
     this.getContentPane().setBackground(Color.RED);
     setIconImage(icon.getImage());
-//    setSize(width, height);
     pack();
     setLocationRelativeTo(null);
     setDefaultCloseOperation(EXIT_ON_CLOSE);
