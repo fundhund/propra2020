@@ -93,8 +93,8 @@ public class RoomView extends JPanel {
 			.map(point -> new Arc2D.Float(
 				point.x,
 				point.y,
-				5,
-				5,
+				5 * scale,
+				5 * scale,
 				0,
 				360,
 				Arc2D.CHORD))

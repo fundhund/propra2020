@@ -25,6 +25,7 @@ public class Room {
 	private HashMap<Direction, List<Line2D.Float>> wallsByDirection;
 	private HashMap<Orientation, List<java.lang.Float>> intervals;
 	private HashMap<String, java.lang.Float> boundaries;
+	private Rectangle2D.Float[] rectangles;
 	private float width;
 	private float height;
 
@@ -42,10 +43,23 @@ public class Room {
 		this.wallsByDirection = createWallsByDirection();
 		this.intervals = createIntervals();
 		this.boundaries = createBoundaries();
+		this.rectangles = createRectangles();
 		this.width = calculateWidth();
 		this.height = calculateHeight();
 	}
 	
+	private java.awt.geom.Rectangle2D.Float[] createRectangles() {
+		
+		int numberOfWalls = walls.size();
+		Rectangle2D.Float[] rectangles = new Rectangle2D.Float[numberOfWalls];
+		
+		for (int i = 0; i < numberOfWalls; i++) {
+			rectangles[i] = getRectangle(walls.get(i));
+		}
+		
+		return rectangles;
+	}
+
 	public HashMap<String, java.lang.Float> getBoundaries() {
 		return boundaries;
 	}
@@ -75,11 +89,13 @@ public class Room {
 		boundaries.put("yMin", yMin);
 		boundaries.put("yMax", yMax);
 		
-		System.out.println(this.boundaries);
-		
 		return boundaries;
 	}
 	
+	public Rectangle2D.Float[] getRectangles() {
+		return rectangles;
+	}
+
 	private float calculateWidth() {
 		return boundaries.get("xMax") - boundaries.get("xMin");
 	}
@@ -549,7 +565,7 @@ public class Room {
 		Direction oppositeDirection = direction.getOpposite();
 
 		Line2D.Float extendedWall = getExtendedWall(wall);
-		Line2D.Float oppositeWall = getNearestWall(extendedWall, direction, oppositeDirection); //opposite wall ist null bei east (1)
+		Line2D.Float oppositeWall = getNearestWall(extendedWall, direction, oppositeDirection);
 		
 		float x, y, w, h;
 		

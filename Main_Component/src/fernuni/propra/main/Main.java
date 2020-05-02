@@ -54,11 +54,16 @@ public class Main {
 				.get()
 				.split("=")[1];
 		
+		if (mode.contains("d")) {
+			display(room, mode);
+		}
+	}
+
+	private static void display(Room room, String mode) {
 		EventQueue.invokeLater(() -> {
-  		
-  		var ui = new UserInterface(mode, room);
-  		ui.setVisible(true);
-  	});
+			var ui = new UserInterface(mode, room);
+			ui.setVisible(true);
+		});
 	}
 		
 	public static HashMap<String, Object> getParams(String[] args) {

@@ -1046,4 +1046,58 @@ public class RoomTest {
 		// Assert
 		assertEquals("Did not return correct direction.", expectedDirection, actualDirection);
 	}
+	
+	@Test
+	public void Room_constructor_CreatesCorrectRectanglesForSquare() throws IncorrectShapeException {
+		
+		// Arrange
+		String id = "id";
+		List<Point2D.Float> corners = getCornersForSquare();
+		Room room = new Room(id, corners);
+		
+		Rectangle2D.Float expectedRectangle = new Rectangle2D.Float(0.0f, 0.0f, 2.0f, 2.0f);
+
+		// Act
+		Rectangle2D.Float[] actualRectangles = room.getRectangles();
+		
+		// Assert
+		assertTrue("Did not return correct rectangle.", areEqual(expectedRectangle, actualRectangles[0]));
+		assertTrue("Did not return correct rectangle.", areEqual(expectedRectangle, actualRectangles[1]));
+		assertTrue("Did not return correct rectangle.", areEqual(expectedRectangle, actualRectangles[2]));
+		assertTrue("Did not return correct rectangle.", areEqual(expectedRectangle, actualRectangles[3]));
+	}
+	
+	@Test
+	public void Room_constructor_CreatesCorrectRectanglesForPlusShape() throws IncorrectShapeException {
+		
+		// Arrange
+		String id = "id";
+		List<Point2D.Float> corners = getCornersForPlusShape();
+		Room room = new Room(id, corners);
+		
+		Rectangle2D.Float verticalRectangle = new Rectangle2D.Float(1, 0, 1, 3);
+		Rectangle2D.Float horizontalRectangle = new Rectangle2D.Float(0, 1, 3, 1);
+		
+		Rectangle2D.Float[] expectedRectangles = new Rectangle2D.Float[12];
+		expectedRectangles[0] = verticalRectangle;
+		expectedRectangles[1] = verticalRectangle;
+		expectedRectangles[2] = horizontalRectangle;
+		expectedRectangles[3] = horizontalRectangle;
+		expectedRectangles[4] = horizontalRectangle;
+		expectedRectangles[5] = verticalRectangle;
+		expectedRectangles[6] = verticalRectangle;
+		expectedRectangles[7] = verticalRectangle;
+		expectedRectangles[8] = horizontalRectangle;
+		expectedRectangles[9] = horizontalRectangle;
+		expectedRectangles[10] = horizontalRectangle;
+		expectedRectangles[11] = verticalRectangle;
+
+		// Act
+		Rectangle2D.Float[] actualRectangles = room.getRectangles();
+		
+		// Assert
+		for (int i = 0; i < 12; i++) {
+			assertTrue("Did not return correct rectangle.", areEqual(expectedRectangles[i], actualRectangles[i]));
+		}
+	}
 }
