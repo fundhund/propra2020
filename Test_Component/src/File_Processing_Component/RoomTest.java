@@ -1055,16 +1055,14 @@ public class RoomTest {
 		List<Point2D.Float> corners = getCornersForSquare();
 		Room room = new Room(id, corners);
 		
-		Rectangle2D.Float expectedRectangle = new Rectangle2D.Float(0.0f, 0.0f, 2.0f, 2.0f);
+		Rectangle2D.Float expectedRectangle = new Rectangle2D.Float(0, 0, 2, 2);
 
 		// Act
 		Rectangle2D.Float[] actualRectangles = room.getRectangles();
 		
 		// Assert
+		assertEquals("Did not return correct number of rectangles.", 1, actualRectangles.length);
 		assertTrue("Did not return correct rectangle.", areEqual(expectedRectangle, actualRectangles[0]));
-		assertTrue("Did not return correct rectangle.", areEqual(expectedRectangle, actualRectangles[1]));
-		assertTrue("Did not return correct rectangle.", areEqual(expectedRectangle, actualRectangles[2]));
-		assertTrue("Did not return correct rectangle.", areEqual(expectedRectangle, actualRectangles[3]));
 	}
 	
 	@Test
@@ -1077,27 +1075,13 @@ public class RoomTest {
 		
 		Rectangle2D.Float verticalRectangle = new Rectangle2D.Float(1, 0, 1, 3);
 		Rectangle2D.Float horizontalRectangle = new Rectangle2D.Float(0, 1, 3, 1);
-		
-		Rectangle2D.Float[] expectedRectangles = new Rectangle2D.Float[12];
-		expectedRectangles[0] = verticalRectangle;
-		expectedRectangles[1] = verticalRectangle;
-		expectedRectangles[2] = horizontalRectangle;
-		expectedRectangles[3] = horizontalRectangle;
-		expectedRectangles[4] = horizontalRectangle;
-		expectedRectangles[5] = verticalRectangle;
-		expectedRectangles[6] = verticalRectangle;
-		expectedRectangles[7] = verticalRectangle;
-		expectedRectangles[8] = horizontalRectangle;
-		expectedRectangles[9] = horizontalRectangle;
-		expectedRectangles[10] = horizontalRectangle;
-		expectedRectangles[11] = verticalRectangle;
 
 		// Act
 		Rectangle2D.Float[] actualRectangles = room.getRectangles();
 		
 		// Assert
-		for (int i = 0; i < 12; i++) {
-			assertTrue("Did not return correct rectangle.", areEqual(expectedRectangles[i], actualRectangles[i]));
-		}
+		assertEquals("Did not return correct number of rectangles.", 2, actualRectangles.length);
+		assertTrue("Did not return correct rectangle.", areEqual(verticalRectangle, actualRectangles[0]));
+		assertTrue("Did not return correct rectangle.", areEqual(horizontalRectangle, actualRectangles[1]));
 	}
 }

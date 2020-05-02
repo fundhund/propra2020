@@ -50,14 +50,24 @@ public class Room {
 	
 	private java.awt.geom.Rectangle2D.Float[] createRectangles() {
 		
-		int numberOfWalls = walls.size();
-		Rectangle2D.Float[] rectangles = new Rectangle2D.Float[numberOfWalls];
+		List<Rectangle2D.Float> rectanglesList = new ArrayList<>();
 		
-		for (int i = 0; i < numberOfWalls; i++) {
-			rectangles[i] = getRectangle(walls.get(i));
+		for (int i = 0; i < walls.size(); i++) {
+			
+			Rectangle2D.Float currentRectangle = getRectangle(walls.get(i));
+			
+			if (!rectanglesList.contains(currentRectangle))
+			rectanglesList.add(currentRectangle);
 		}
 		
-		return rectangles;
+		int numberOfRectangles = rectanglesList.size();
+		Rectangle2D.Float[] rectanglesArray = new Rectangle2D.Float[numberOfRectangles];
+		
+		for (int j = 0; j < numberOfRectangles; j++) {
+			rectanglesArray[j] = rectanglesList.get(j);
+		}
+		
+		return rectanglesArray;
 	}
 
 	public HashMap<String, java.lang.Float> getBoundaries() {
