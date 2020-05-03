@@ -15,43 +15,10 @@ import fernuni.propra.algorithm.Lamp;
 import fernuni.propra.file_processing.Direction;
 import fernuni.propra.file_processing.IncorrectShapeException;
 import fernuni.propra.file_processing.Room;
+import fernuni.propra.test.TestHelper;
 
 public class LampTest {
 	
-	private List<Point2D.Float> getCornersForSquare(float sideLength) {
-		List<Point2D.Float> corners = new ArrayList<>();
-		corners.add(new Point2D.Float(0.0f, 0.0f));
-		corners.add(new Point2D.Float(sideLength, 0.0f));
-		corners.add(new Point2D.Float(sideLength, sideLength));
-		corners.add(new Point2D.Float(0.0f, sideLength));
-		return corners;
-	}
-	
-	private List<Point2D.Float> getCornersForSquare()  {
-		return getCornersForSquare(2.0f);
-	}
-	
-	private List<Point2D.Float> getCornersForPlusShape(float unit) {
-		List<Point2D.Float> corners = new ArrayList<>();
-		corners.add(new Point2D.Float(unit, 0.0f));
-		corners.add(new Point2D.Float(2 * unit, 0.0f));
-		corners.add(new Point2D.Float(2 * unit, unit));
-		corners.add(new Point2D.Float(3 * unit, unit));
-		corners.add(new Point2D.Float(3 * unit, 2 * unit));
-		corners.add(new Point2D.Float(2 * unit, 2 * unit));
-		corners.add(new Point2D.Float(2 * unit, 3 * unit));
-		corners.add(new Point2D.Float(1 * unit, 3 * unit));
-		corners.add(new Point2D.Float(1 * unit, 2 * unit));
-		corners.add(new Point2D.Float(0.0f, 2 * unit));
-		corners.add(new Point2D.Float(0.0f, unit));
-		corners.add(new Point2D.Float(unit, unit));
-		return corners;
-	}
-	
-	private List<Point2D.Float> getCornersForPlusShape()  {
-		return getCornersForPlusShape(1.0f);
-	}
-
 	@Test
 	public void Lamp_constructor_returnsBasicLamp() throws IncorrectShapeException {
 		
@@ -77,7 +44,7 @@ public class LampTest {
 		
 		// Arrange
 		String id = "id";
-		List<Point2D.Float> corners = getCornersForSquare();
+		List<Point2D.Float> corners = TestHelper.getCornersForSquare();
 		Room room = new Room(id, corners);
 		Rectangle2D.Float[] rectangles = room.getRectangles();
 		Point2D.Float position = new Point2D.Float(1, 1);
@@ -98,7 +65,7 @@ public class LampTest {
 		
 		// Arrange
 		String id = "id";
-		List<Point2D.Float> corners = getCornersForSquare();
+		List<Point2D.Float> corners = TestHelper.getCornersForSquare();
 		Room room = new Room(id, corners);
 		Rectangle2D.Float[] rectangles = room.getRectangles();
 		Point2D.Float position = new Point2D.Float(3, 3);
@@ -117,7 +84,7 @@ public class LampTest {
 		
 		// Arrange
 		String id = "id";
-		List<Point2D.Float> corners = getCornersForPlusShape();
+		List<Point2D.Float> corners = TestHelper.getCornersForPlusShape();
 		Room room = new Room(id, corners);
 		Rectangle2D.Float[] rectangles = room.getRectangles();
 		
@@ -142,7 +109,7 @@ public class LampTest {
 		
 		// Arrange
 		String id = "id";
-		List<Point2D.Float> corners = getCornersForPlusShape();
+		List<Point2D.Float> corners = TestHelper.getCornersForPlusShape();
 		Room room = new Room(id, corners);
 		Rectangle2D.Float[] rectangles = room.getRectangles();
 		

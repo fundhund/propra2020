@@ -1,5 +1,15 @@
 package fernuni.propra.algorithm;
 
+import java.awt.geom.Rectangle2D;
+import static fernuni.propra.file_processing.RectangleHelper.getIntersection;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import fernuni.propra.file_processing.Room;
+
 /**
  * Diese Klasse wird als API (Application Programming Interaface) verwendet. Das
  * bedeutet, dass diese Klasse als Bibliothek für andere Applikationen verwendet
@@ -34,5 +44,47 @@ public class Ausleuchtung implements IAusleuchtung {
 		// TODO Logik implementieren
 		return 0;
 	}
+	
+	public List<Rectangle2D.Float> getCandidateRectangles(Room room) {
+		
+		Rectangle2D.Float[] rectangles = room.getRectangles();
+		List<Rectangle2D.Float> intersections = new ArrayList<>();
+		
+		Arrays.stream(rectangles).forEach(rectangle -> intersections.add(rectangle));
+		
+		List<Rectangle2D.Float> currentIntersections = intersections;
+		int currentLength = currentIntersections.size();
+		boolean foundNewIntersections = false;
+		List<Rectangle2D.Float> newIntersections;
 
+		do {
+			newIntersections = new ArrayList<>();
+			currentLength = currentIntersections.size();
+			
+			for (int i = 0; i < currentLength; i++) {
+				
+				Rectangle2D.Float current = currentIntersections.get(i);
+				boolean hasIntersection = false;
+				
+				for (int j = i + 1; j < currentLength; j++) {
+					
+					Rectangle2D.Float candidate = currentIntersections.get(j);
+					if (current.intersects(candidate)) {
+						hasIntersection = true;
+						foundNewIntersections = true;
+						newIntersections.add(getIntersection(current, candidate));
+					}
+				}
+				
+				if (!hasIntersection) {
+					newIntersections.add(current);
+				}
+			}
+			
+			currentIntersections = newIntersections;
+			
+		} while (foundNewIntersections);
+		
+		return currentIntersections;
+	}
 }

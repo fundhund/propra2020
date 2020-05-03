@@ -20,9 +20,6 @@ public class RectangleHelper {
     if (r1y2 > r2y2) r1y2 = r2y2;
     r1x2 -= r1x1;
     r1y2 -= r1y1;
-    // r1x2,r1y2 will never overflow (they will never be
-    // larger than the smallest of the two source w,h)
-    // they might underflow, though...
     if (r1x2 < Float.MIN_VALUE) r1x2 = Float.MIN_VALUE;
     if (r1y2 < Float.MIN_VALUE) r1y2 = Float.MIN_VALUE;
     return new Rectangle2D.Float(r1x1, r1y1, (float) r1x2, (float) r1y2);

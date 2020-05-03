@@ -3,6 +3,7 @@ package File_Processing_Component;
 import fernuni.propra.file_processing.Direction;
 import fernuni.propra.file_processing.IncorrectShapeException;
 import fernuni.propra.file_processing.Room;
+import fernuni.propra.test.TestHelper;
 
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
@@ -16,120 +17,13 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class RoomTest {
-	
-	private boolean areEqual(Line2D.Float w1, Line2D.Float w2) {
-		return w1.x1 == w2.x1 && w1.y1 == w2.y1 && w1.x2 == w2.x2 && w1.y2 == w2.y2
-				|| w1.x1 == w2.x2 && w1.y1 == w2.y2 && w1.x2 == w2.x1 && w1.y2 == w2.y1;
-	}
-	
-	private boolean areEqual(Rectangle2D.Float r1, Rectangle2D.Float r2) {
-		return r1.x == r2.x && r1.y == r2.y && r1.width == r2.width && r1.height == r2.height;
-	}
-	
-	private List<Point2D.Float> getCornersForSquare(float sideLength) {
-		List<Point2D.Float> corners = new ArrayList<>();
-		corners.add(new Point2D.Float(0.0f, 0.0f));
-		corners.add(new Point2D.Float(sideLength, 0.0f));
-		corners.add(new Point2D.Float(sideLength, sideLength));
-		corners.add(new Point2D.Float(0.0f, sideLength));
-		return corners;
-	}
-	
-	private List<Point2D.Float> getCornersForSquare()  {
-		return getCornersForSquare(2.0f);
-	}
-	
-	private List<Point2D.Float> getCornersForLShape(float sideLength) {
-		List<Point2D.Float> corners = new ArrayList<>();
-		corners.add(new Point2D.Float(0.0f, 0.0f));
-		corners.add(new Point2D.Float(sideLength, 0.0f));
-		corners.add(new Point2D.Float(sideLength, sideLength/2));
-		corners.add(new Point2D.Float(sideLength/2, sideLength/2));
-		corners.add(new Point2D.Float(sideLength/2, sideLength));
-		corners.add(new Point2D.Float(0.0f, sideLength));
-		return corners;
-	}
-	
-	private List<Point2D.Float> getCornersForLShape()  {
-		return getCornersForLShape(2.0f);
-	}
-	
-	private List<Point2D.Float> getCornersForArcShape(float unit) {
-		List<Point2D.Float> corners = new ArrayList<>();
-		corners.add(new Point2D.Float(0.0f, 0.0f));
-		corners.add(new Point2D.Float(unit, 0.0f));
-		corners.add(new Point2D.Float(unit, unit));
-		corners.add(new Point2D.Float(2 * unit, unit));
-		corners.add(new Point2D.Float(2 * unit, 0.0f));
-		corners.add(new Point2D.Float(3 * unit, 0.0f));
-		corners.add(new Point2D.Float(3 * unit, 2 * unit));
-		corners.add(new Point2D.Float(0, 2 * unit));
-		return corners;
-	}
-	
-	private List<Point2D.Float> getCornersForArcShape()  {
-		return getCornersForArcShape(1.0f);
-	}
-	
-	private List<Point2D.Float> getCornersForZShape(float unit) {
-		List<Point2D.Float> corners = new ArrayList<>();
-		corners.add(new Point2D.Float(unit, 0.0f));
-		corners.add(new Point2D.Float(3 * unit, 0.0f));
-		corners.add(new Point2D.Float(3 * unit, unit));
-		corners.add(new Point2D.Float(2 * unit, unit));
-		corners.add(new Point2D.Float(2 * unit, 3 * unit));
-		corners.add(new Point2D.Float(0.0f, 3 * unit));
-		corners.add(new Point2D.Float(0.0f, 2 * unit));
-		corners.add(new Point2D.Float(unit, 2 * unit));
-		return corners;
-	}
-	
-	private List<Point2D.Float> getCornersForZShape()  {
-		return getCornersForZShape(1.0f);
-	}
-	
-	private List<Point2D.Float> getCornersForPlusShape(float unit) {
-		List<Point2D.Float> corners = new ArrayList<>();
-		corners.add(new Point2D.Float(unit, 0.0f));
-		corners.add(new Point2D.Float(2 * unit, 0.0f));
-		corners.add(new Point2D.Float(2 * unit, unit));
-		corners.add(new Point2D.Float(3 * unit, unit));
-		corners.add(new Point2D.Float(3 * unit, 2 * unit));
-		corners.add(new Point2D.Float(2 * unit, 2 * unit));
-		corners.add(new Point2D.Float(2 * unit, 3 * unit));
-		corners.add(new Point2D.Float(1 * unit, 3 * unit));
-		corners.add(new Point2D.Float(1 * unit, 2 * unit));
-		corners.add(new Point2D.Float(0.0f, 2 * unit));
-		corners.add(new Point2D.Float(0.0f, unit));
-		corners.add(new Point2D.Float(unit, unit));
-		return corners;
-	}
-	
-	private List<Point2D.Float> getCornersForPlusShape()  {
-		return getCornersForPlusShape(1.0f);
-	}
-	
-	private boolean containEqualLines(List<Line2D.Float> lines1, List<Line2D.Float> lines2) {
-		if (lines1.size() != lines2.size()) return false;
-		
-		for (int i = 0; i < lines1.size(); i++) {
-			
-			Line2D.Float line1 = lines1.get(i);
-			Line2D.Float line2 = lines2.get(i);
 
-			if (!line1.getP1().equals(line2.getP1())
-					|| !line1.getP2().equals(line2.getP2())) return false;
-		}
-		
-		return true;
-	}
-	
 	@Test
 	public void Room_getWalls_ReturnsCorrectWallsByDirection() throws IncorrectShapeException {
 		
 		// Arrange
 		String expectedId = "id";
-		List<Point2D.Float> corners = getCornersForSquare();
+		List<Point2D.Float> corners = TestHelper.getCornersForSquare();
 		Room room = new Room(expectedId, corners);
 		
 		List<Line2D.Float> expectedNorthWalls = new ArrayList<>();
@@ -159,7 +53,7 @@ public class RoomTest {
 		
 		// Arrange
 		String expectedId = "id";
-		List<Point2D.Float> expectedCorners = getCornersForSquare();
+		List<Point2D.Float> expectedCorners = TestHelper.getCornersForSquare();
 		List<Point2D.Float> expectedLamps = new ArrayList<>();
 		expectedLamps.add(new Point2D.Float(1.0f, 1.0f));
 		
@@ -182,7 +76,7 @@ public class RoomTest {
 		// Arrange
 		String expectedId = "id";
 		
-		List<Point2D.Float> expectedCorners = getCornersForSquare();
+		List<Point2D.Float> expectedCorners = TestHelper.getCornersForSquare();
 		List<Point2D.Float> expectedLamps = new ArrayList<>();
 		
 		// Act
@@ -247,7 +141,7 @@ public class RoomTest {
 		
 		// Arrange
 		String expectedId = "id";
-		List<Point2D.Float> corners = getCornersForSquare();
+		List<Point2D.Float> corners = TestHelper.getCornersForSquare();
 		Room room = new Room(expectedId, corners);
 		Point2D.Float point = new Point2D.Float(1.0f, 1.0f);
 
@@ -263,7 +157,7 @@ public class RoomTest {
 		
 		// Arrange
 		String expectedId = "id";
-		List<Point2D.Float> corners = getCornersForSquare();
+		List<Point2D.Float> corners = TestHelper.getCornersForSquare();
 		Room room = new Room(expectedId, corners);
 		Point2D.Float point = new Point2D.Float(3.0f, 3.0f);
 
@@ -279,7 +173,7 @@ public class RoomTest {
 		
 		// Arrange
 		String expectedId = "id";
-		List<Point2D.Float> corners = getCornersForSquare();
+		List<Point2D.Float> corners = TestHelper.getCornersForSquare();
 		Room room = new Room(expectedId, corners);
 
 		// Act
@@ -294,7 +188,7 @@ public class RoomTest {
 		
 		// Arrange
 		String expectedId = "id";
-		List<Point2D.Float> corners = getCornersForSquare();
+		List<Point2D.Float> corners = TestHelper.getCornersForSquare();
 		Room room = new Room(expectedId, corners);
 
 		// Act
@@ -311,7 +205,7 @@ public class RoomTest {
 		
 		// Arrange
 		String expectedId = "id";
-		List<Point2D.Float> corners = getCornersForSquare();
+		List<Point2D.Float> corners = TestHelper.getCornersForSquare();
 		Room room = new Room(expectedId, corners);
 
 		// Act
@@ -326,7 +220,7 @@ public class RoomTest {
 		
 		// Arrange
 		String expectedId = "id";
-		List<Point2D.Float> corners = getCornersForSquare();
+		List<Point2D.Float> corners = TestHelper.getCornersForSquare();
 		Room room = new Room(expectedId, corners);
 
 		// Act
@@ -341,7 +235,7 @@ public class RoomTest {
 		
 		// Arrange
 		String expectedId = "id";
-		List<Point2D.Float> corners = getCornersForSquare();
+		List<Point2D.Float> corners = TestHelper.getCornersForSquare();
 		Room room = new Room(expectedId, corners);
 
 		// Act
@@ -358,7 +252,7 @@ public class RoomTest {
 		
 		// Arrange
 		String expectedId = "id";
-		List<Point2D.Float> corners = getCornersForSquare();
+		List<Point2D.Float> corners = TestHelper.getCornersForSquare();
 		Room room = new Room(expectedId, corners);
 
 		// Act
@@ -373,7 +267,7 @@ public class RoomTest {
 		
 		// Arrange
 		String expectedId = "id";
-		List<Point2D.Float> corners = getCornersForSquare();
+		List<Point2D.Float> corners = TestHelper.getCornersForSquare();
 		Room room = new Room(expectedId, corners);
 
 		// Act
@@ -388,7 +282,7 @@ public class RoomTest {
 		
 		// Arrange
 		String expectedId = "id";
-		List<Point2D.Float> corners = getCornersForSquare();
+		List<Point2D.Float> corners = TestHelper.getCornersForSquare();
 		Room room = new Room(expectedId, corners);
 
 		// Act
@@ -405,7 +299,7 @@ public class RoomTest {
 		
 		// Arrange
 		String expectedId = "id";
-		List<Point2D.Float> corners = getCornersForSquare();
+		List<Point2D.Float> corners = TestHelper.getCornersForSquare();
 		Room room = new Room(expectedId, corners);
 
 		// Act
@@ -420,7 +314,7 @@ public class RoomTest {
 		
 		// Arrange
 		String expectedId = "id";
-		List<Point2D.Float> corners = getCornersForSquare();
+		List<Point2D.Float> corners = TestHelper.getCornersForSquare();
 		Room room = new Room(expectedId, corners);
 
 		// Act
@@ -435,7 +329,7 @@ public class RoomTest {
 		
 		// Arrange
 		String expectedId = "id";
-		List<Point2D.Float> corners = getCornersForSquare();
+		List<Point2D.Float> corners = TestHelper.getCornersForSquare();
 		Room room = new Room(expectedId, corners);
 
 		// Act
@@ -452,7 +346,7 @@ public class RoomTest {
 		
 		// Arrange
 		String expectedId = "id";
-		List<Point2D.Float> corners = getCornersForSquare();
+		List<Point2D.Float> corners = TestHelper.getCornersForSquare();
 		Room room = new Room(expectedId, corners);
 
 		// Act
@@ -467,7 +361,7 @@ public class RoomTest {
 		
 		// Arrange
 		String expectedId = "id";
-		List<Point2D.Float> corners = getCornersForSquare();
+		List<Point2D.Float> corners = TestHelper.getCornersForSquare();
 		Room room = new Room(expectedId, corners);
 		
 		List<Line2D.Float> expectedVerticalWalls = new ArrayList<>();
@@ -486,7 +380,7 @@ public class RoomTest {
 		
 		// Arrange
 		String expectedId = "id";
-		List<Point2D.Float> corners = getCornersForSquare();
+		List<Point2D.Float> corners = TestHelper.getCornersForSquare();
 		Room room = new Room(expectedId, corners);
 		
 		List<Line2D.Float> expectedHorizontalWalls = new ArrayList<>();
@@ -505,7 +399,7 @@ public class RoomTest {
 		
 		// Arrange
 		String expectedId = "id";
-		List<Point2D.Float> corners = getCornersForSquare();
+		List<Point2D.Float> corners = TestHelper.getCornersForSquare();
 		Room room = new Room(expectedId, corners);
 		
 		List<java.lang.Float> expectedXs = new ArrayList<>();
@@ -524,7 +418,7 @@ public class RoomTest {
 		
 		// Arrange
 		String expectedId = "id";
-		List<Point2D.Float> corners = getCornersForSquare();
+		List<Point2D.Float> corners = TestHelper.getCornersForSquare();
 		Collections.reverse(corners);
 		Room room = new Room(expectedId, corners);
 		
@@ -544,7 +438,7 @@ public class RoomTest {
 		
 		// Arrange
 		String expectedId = "id";
-		List<Point2D.Float> corners = getCornersForSquare();
+		List<Point2D.Float> corners = TestHelper.getCornersForSquare();
 		Room room = new Room(expectedId, corners);
 		
 		List<java.lang.Float> expectedYs = new ArrayList<>();
@@ -563,7 +457,7 @@ public class RoomTest {
 		
 		// Arrange
 		String expectedId = "id";
-		List<Point2D.Float> corners = getCornersForSquare();
+		List<Point2D.Float> corners = TestHelper.getCornersForSquare();
 		Collections.reverse(corners);
 		Room room = new Room(expectedId, corners);
 		
@@ -583,7 +477,7 @@ public class RoomTest {
 		
 		// Arrange
 		String id = "id";
-		List<Point2D.Float> corners = getCornersForLShape();
+		List<Point2D.Float> corners = TestHelper.getCornersForLShape();
 		Room room = new Room(id, corners);
 		
 		List<java.lang.Float> expectedXs = new ArrayList<>();
@@ -605,7 +499,7 @@ public class RoomTest {
 		
 		// Arrange
 		String id = "id";
-		List<Point2D.Float> corners = getCornersForLShape();
+		List<Point2D.Float> corners = TestHelper.getCornersForLShape();
 		Room room = new Room(id, corners);
 		
 		List<Point2D.Float> points = new ArrayList<>();
@@ -623,7 +517,7 @@ public class RoomTest {
 		List<Line2D.Float> actualSections = room.getWallSections(wall);
 		
 		// Assert
-		assertTrue("Did not return correct wall sections.", containEqualLines(expectedSections, actualSections));
+		assertTrue("Did not return correct wall sections.", TestHelper.containEqualLines(expectedSections, actualSections));
 	} 
 	
 	@Test
@@ -631,7 +525,7 @@ public class RoomTest {
 		
 		// Arrange
 		String id = "id";
-		List<Point2D.Float> corners = getCornersForLShape();
+		List<Point2D.Float> corners = TestHelper.getCornersForLShape();
 		Room room = new Room(id, corners);
 		
 		List<Point2D.Float> points = new ArrayList<>();
@@ -649,7 +543,7 @@ public class RoomTest {
 		List<Line2D.Float> actualSections = room.getWallSections(wall);
 		
 		// Assert
-		assertTrue("Did not return correct wall sections.", containEqualLines(expectedSections, actualSections));
+		assertTrue("Did not return correct wall sections.", TestHelper.containEqualLines(expectedSections, actualSections));
 	}
 	
 	@Test
@@ -657,7 +551,7 @@ public class RoomTest {
 		
 		// Arrange
 		String id = "id";
-		List<Point2D.Float> corners = getCornersForZShape();
+		List<Point2D.Float> corners = TestHelper.getCornersForZShape();
 		Room room = new Room(id, corners);
 		List<Line2D.Float> walls = room.getWalls();
 		
@@ -689,7 +583,7 @@ public class RoomTest {
 		
 		// Arrange
 		String id = "id";
-		List<Point2D.Float> corners = getCornersForZShape();
+		List<Point2D.Float> corners = TestHelper.getCornersForZShape();
 		Room room = new Room(id, corners);
 		List<Line2D.Float> walls = room.getWalls();
 		
@@ -721,7 +615,7 @@ public class RoomTest {
 		
 		// Arrange
 		String id = "id";
-		List<Point2D.Float> corners = getCornersForPlusShape();
+		List<Point2D.Float> corners = TestHelper.getCornersForPlusShape();
 		Room room = new Room(id, corners);
 		List<Line2D.Float> walls = room.getWalls();
 		
@@ -744,7 +638,7 @@ public class RoomTest {
 		
 		// Arrange
 		String id = "id";
-		List<Point2D.Float> corners = getCornersForPlusShape();
+		List<Point2D.Float> corners = TestHelper.getCornersForPlusShape();
 		Room room = new Room(id, corners);
 		List<Line2D.Float> walls = room.getWalls();
 		
@@ -767,7 +661,7 @@ public class RoomTest {
 		
 		// Arrange
 		String id = "id";
-		List<Point2D.Float> corners = getCornersForPlusShape();
+		List<Point2D.Float> corners = TestHelper.getCornersForPlusShape();
 		Room room = new Room(id, corners);
 		List<Line2D.Float> walls = room.getWalls();
 		
@@ -790,7 +684,7 @@ public class RoomTest {
 		
 		// Arrange
 		String id = "id";
-		List<Point2D.Float> corners = getCornersForPlusShape();
+		List<Point2D.Float> corners = TestHelper.getCornersForPlusShape();
 		Room room = new Room(id, corners);
 		List<Line2D.Float> walls = room.getWalls();
 		
@@ -813,7 +707,7 @@ public class RoomTest {
 		
 		// Arrange
 		String id = "id";
-		List<Point2D.Float> corners = getCornersForPlusShape();
+		List<Point2D.Float> corners = TestHelper.getCornersForPlusShape();
 		Room room = new Room(id, corners);
 		List<Line2D.Float> walls = room.getWalls();
 		
@@ -825,7 +719,7 @@ public class RoomTest {
 		Line2D.Float actualExtendedWall = room.getExtendedWall(wall);
 		
 		// Assert
-		assertTrue("Did not return extended wall.", areEqual(expectedExtendedWall, actualExtendedWall));
+		assertTrue("Did not return extended wall.", TestHelper.areEqual(expectedExtendedWall, actualExtendedWall));
 	}
 	
 	@Test
@@ -833,7 +727,7 @@ public class RoomTest {
 		
 		// Arrange
 		String id = "id";
-		List<Point2D.Float> corners = getCornersForPlusShape();
+		List<Point2D.Float> corners = TestHelper.getCornersForPlusShape();
 		Room room = new Room(id, corners);
 		List<Line2D.Float> walls = room.getWalls();
 		
@@ -845,7 +739,7 @@ public class RoomTest {
 		Line2D.Float actualExtendedWall = room.getExtendedWall(wall);
 		
 		// Assert
-		assertTrue("Did not return extended wall.", areEqual(expectedExtendedWall, actualExtendedWall));
+		assertTrue("Did not return extended wall.", TestHelper.areEqual(expectedExtendedWall, actualExtendedWall));
 	}
 	
 	@Test
@@ -853,7 +747,7 @@ public class RoomTest {
 		
 		// Arrange
 		String id = "id";
-		List<Point2D.Float> corners = getCornersForPlusShape();
+		List<Point2D.Float> corners = TestHelper.getCornersForPlusShape();
 		Room room = new Room(id, corners);
 		List<Line2D.Float> walls = room.getWalls();
 		
@@ -865,7 +759,7 @@ public class RoomTest {
 		Line2D.Float actualExtendedWall = room.getExtendedWall(wall);
 		
 		// Assert
-		assertTrue("Did not return extended wall.", areEqual(expectedExtendedWall, actualExtendedWall));
+		assertTrue("Did not return extended wall.", TestHelper.areEqual(expectedExtendedWall, actualExtendedWall));
 	}
 	
 	@Test
@@ -873,7 +767,7 @@ public class RoomTest {
 		
 		// Arrange
 		String id = "id";
-		List<Point2D.Float> corners = getCornersForPlusShape();
+		List<Point2D.Float> corners = TestHelper.getCornersForPlusShape();
 		Room room = new Room(id, corners);
 		List<Line2D.Float> walls = room.getWalls();
 		
@@ -885,7 +779,7 @@ public class RoomTest {
 		Line2D.Float actualExtendedWall = room.getExtendedWall(wall);
 		
 		// Assert
-		assertTrue("Did not return extended wall.", areEqual(expectedExtendedWall, actualExtendedWall));
+		assertTrue("Did not return extended wall.", TestHelper.areEqual(expectedExtendedWall, actualExtendedWall));
 	}
 	
 	@Test
@@ -893,7 +787,7 @@ public class RoomTest {
 		
 		// Arrange
 		String id = "id";
-		List<Point2D.Float> corners = getCornersForPlusShape();
+		List<Point2D.Float> corners = TestHelper.getCornersForPlusShape();
 		Room room = new Room(id, corners);
 		List<Line2D.Float> walls = room.getWalls();
 		
@@ -913,7 +807,7 @@ public class RoomTest {
 		
 		// Arrange
 		String id = "id";
-		List<Point2D.Float> corners = getCornersForPlusShape();
+		List<Point2D.Float> corners = TestHelper.getCornersForPlusShape();
 		Room room = new Room(id, corners);
 		List<Line2D.Float> walls = room.getWalls();
 		
@@ -933,7 +827,7 @@ public class RoomTest {
 		
 		// Arrange
 		String id = "id";
-		List<Point2D.Float> corners = getCornersForPlusShape();
+		List<Point2D.Float> corners = TestHelper.getCornersForPlusShape();
 		Room room = new Room(id, corners);
 		List<Line2D.Float> walls = room.getWalls();
 		
@@ -953,7 +847,7 @@ public class RoomTest {
 		
 		// Arrange
 		String id = "id";
-		List<Point2D.Float> corners = getCornersForPlusShape();
+		List<Point2D.Float> corners = TestHelper.getCornersForPlusShape();
 		Room room = new Room(id, corners);
 		List<Line2D.Float> walls = room.getWalls();
 		
@@ -973,7 +867,7 @@ public class RoomTest {
 		
 		// Arrange
 		String id = "id";
-		List<Point2D.Float> corners = getCornersForPlusShape();
+		List<Point2D.Float> corners = TestHelper.getCornersForPlusShape();
 		Room room = new Room(id, corners);
 		List<Line2D.Float> walls = room.getWalls();
 		
@@ -985,7 +879,7 @@ public class RoomTest {
 		Rectangle2D.Float actualRectangle = room.getRectangle(wall);
 		
 		// Assert
-		assertTrue("Did not return correct rectangle.", areEqual(expectedRectangle, actualRectangle));
+		assertTrue("Did not return correct rectangle.", TestHelper.areEqual(expectedRectangle, actualRectangle));
 	}
 	
 	@Test
@@ -993,7 +887,7 @@ public class RoomTest {
 		
 		// Arrange
 		String id = "id";
-		List<Point2D.Float> corners = getCornersForPlusShape();
+		List<Point2D.Float> corners = TestHelper.getCornersForPlusShape();
 		Room room = new Room(id, corners);
 		List<Line2D.Float> walls = room.getWalls();
 		
@@ -1005,7 +899,7 @@ public class RoomTest {
 		Rectangle2D.Float actualRectangle = room.getRectangle(wall);
 		
 		// Assert
-		assertTrue("Did not return correct rectangle.", areEqual(expectedRectangle, actualRectangle));
+		assertTrue("Did not return correct rectangle.", TestHelper.areEqual(expectedRectangle, actualRectangle));
 	}
 	
 	@Test
@@ -1013,7 +907,7 @@ public class RoomTest {
 		
 		// Arrange
 		String id = "id";
-		List<Point2D.Float> corners = getCornersForPlusShape();
+		List<Point2D.Float> corners = TestHelper.getCornersForPlusShape();
 		Room room = new Room(id, corners);
 		List<Line2D.Float> walls = room.getWalls();
 		
@@ -1024,7 +918,7 @@ public class RoomTest {
 		// Act
 		Rectangle2D.Float actualRectangle = room.getRectangle(wall);
 		// Assert
-		assertTrue("Did not return correct rectangle.", areEqual(expectedRectangle, actualRectangle));
+		assertTrue("Did not return correct rectangle.", TestHelper.areEqual(expectedRectangle, actualRectangle));
 	}
 	
 	@Test
@@ -1032,7 +926,7 @@ public class RoomTest {
 		
 		// Arrange
 		String id = "id";
-		List<Point2D.Float> corners = getCornersForPlusShape();
+		List<Point2D.Float> corners = TestHelper.getCornersForPlusShape();
 		Room room = new Room(id, corners);
 		List<Line2D.Float> walls = room.getWalls();
 		
@@ -1052,7 +946,7 @@ public class RoomTest {
 		
 		// Arrange
 		String id = "id";
-		List<Point2D.Float> corners = getCornersForSquare();
+		List<Point2D.Float> corners = TestHelper.getCornersForSquare();
 		Room room = new Room(id, corners);
 		
 		Rectangle2D.Float expectedRectangle = new Rectangle2D.Float(0, 0, 2, 2);
@@ -1062,7 +956,7 @@ public class RoomTest {
 		
 		// Assert
 		assertEquals("Did not return correct number of rectangles.", 1, actualRectangles.length);
-		assertTrue("Did not return correct rectangle.", areEqual(expectedRectangle, actualRectangles[0]));
+		assertTrue("Did not return correct rectangle.", TestHelper.areEqual(expectedRectangle, actualRectangles[0]));
 	}
 	
 	@Test
@@ -1070,7 +964,7 @@ public class RoomTest {
 		
 		// Arrange
 		String id = "id";
-		List<Point2D.Float> corners = getCornersForPlusShape();
+		List<Point2D.Float> corners = TestHelper.getCornersForPlusShape();
 		Room room = new Room(id, corners);
 		
 		Rectangle2D.Float verticalRectangle = new Rectangle2D.Float(1, 0, 1, 3);
@@ -1081,7 +975,7 @@ public class RoomTest {
 		
 		// Assert
 		assertEquals("Did not return correct number of rectangles.", 2, actualRectangles.length);
-		assertTrue("Did not return correct rectangle.", areEqual(verticalRectangle, actualRectangles[0]));
-		assertTrue("Did not return correct rectangle.", areEqual(horizontalRectangle, actualRectangles[1]));
+		assertTrue("Did not return correct rectangle.", TestHelper.areEqual(verticalRectangle, actualRectangles[0]));
+		assertTrue("Did not return correct rectangle.", TestHelper.areEqual(horizontalRectangle, actualRectangles[1]));
 	}
 }
