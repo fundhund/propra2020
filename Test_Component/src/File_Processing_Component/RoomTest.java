@@ -978,4 +978,46 @@ public class RoomTest {
 		assertTrue("Did not return correct rectangle.", TestHelper.areEqual(verticalRectangle, actualRectangles[0]));
 		assertTrue("Did not return correct rectangle.", TestHelper.areEqual(horizontalRectangle, actualRectangles[1]));
 	}
+	
+	@Test
+	public void Room_constructor_CreatesCorrectRectanglesForArcShape() throws IncorrectShapeException {
+		
+		// Arrange
+		String id = "id";
+		List<Point2D.Float> corners = TestHelper.getCornersForArcShape();
+		Room room = new Room(id, corners);
+		
+		Rectangle2D.Float[] expectedRectangles = new Rectangle2D.Float[3];
+		expectedRectangles[0] = new Rectangle2D.Float(0, 0, 1, 2);
+		expectedRectangles[1] = new Rectangle2D.Float(0, 1, 3, 1);
+		expectedRectangles[2] = new Rectangle2D.Float(2, 0, 1, 2);
+
+		// Act
+		Rectangle2D.Float[] actualRectangles = room.getRectangles();
+		
+		// Assert
+		assertEquals("Did not return correct number of rectangles.", 3, actualRectangles.length);
+		assertEquals("Did not return correct rectangle.", expectedRectangles[0], actualRectangles[0]);
+		assertEquals("Did not return correct rectangle.", expectedRectangles[1], actualRectangles[1]);
+		assertEquals("Did not return correct rectangle.", expectedRectangles[2], actualRectangles[2]);
+	}
+	
+//	@Test
+//	public void fuck() throws IncorrectShapeException {
+//		
+//		// Arrange
+//		String id = "id";
+//		List<Point2D.Float> corners = TestHelper.getCornersForArcShape();
+//		Room room = new Room(id, corners);
+//
+//		// Act
+//		Line2D.Float wall = room.getWalls().get(6);
+//		Line2D.Float expectedNearestWall = room.getWalls().get(2);
+//		Line2D.Float nearestWall = room.getNearestWall(wall, Direction.SOUTH);
+//		System.out.println(room.getDirection(wall));
+//		System.out.println(room.getDirection(expectedNearestWall));
+//		System.out.println(nearestWall.x1 + "," + nearestWall.y1 + "," + nearestWall.x2 + "," + nearestWall.y2);
+//		// Assert
+//		assertTrue(TestHelper.areEqual(expectedNearestWall, nearestWall));
+//	}
 }

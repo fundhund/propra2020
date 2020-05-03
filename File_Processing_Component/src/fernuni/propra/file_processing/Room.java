@@ -1,6 +1,7 @@
 package fernuni.propra.file_processing;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -48,7 +49,7 @@ public class Room {
 		this.height = calculateHeight();
 	}
 	
-	private java.awt.geom.Rectangle2D.Float[] createRectangles() {
+	private Rectangle2D.Float[] createRectangles() {
 		
 		List<Rectangle2D.Float> rectanglesList = new ArrayList<>();
 		
@@ -515,7 +516,8 @@ public class Room {
 				
 				return c -> 
 					Math.max(c.x1, c.x2) >= xMax && Math.min(c.x1, c.x2) < xMax
-						|| Math.min(c.x1, c.x2) <= xMin && Math.max(c.x1, c.x2) > xMin;
+						|| Math.min(c.x1, c.x2) <= xMin && Math.max(c.x1, c.x2) > xMin
+						|| Math.min(c.x1, c.x2) >= xMin && Math.max(c.x1, c.x2) <= xMax;
 						
 			case VERTICAL:
 				
@@ -524,7 +526,8 @@ public class Room {
 				
 				return c -> 
 					Math.max(c.y1, c.y2) >= yMax && Math.min(c.y1, c.y2) < yMax
-						|| Math.min(c.y1, c.y2) <= yMin && Math.max(c.y1, c.y2) > yMin;
+						|| Math.min(c.y1, c.y2) <= yMin && Math.max(c.y1, c.y2) > yMin
+						|| Math.min(c.y1, c.y2) >= yMin && Math.max(c.y1, c.y2) <= yMax;
 						
 			default:
 				return null;

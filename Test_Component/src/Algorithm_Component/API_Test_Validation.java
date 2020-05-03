@@ -1,10 +1,14 @@
 package Algorithm_Component;
 
 import fernuni.propra.algorithm.*;
+import fernuni.propra.file_processing.Room;
 import fernuni.propra.test.TestHelper;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
+
+import java.awt.geom.Point2D;
+import java.util.List;
 
 /*
  * Informationen über das Unit-Testen mit Hilfe von JUnit finden Sie unter http://www.vogella.com/tutorials/JUnit/article.html.
@@ -44,18 +48,4 @@ public class API_Test_Validation {
 //		// Assert
 //		assertTrue("Eine unzulässige Lösung wurde als zulässig gewertet.", !solutionValid);
 //	}
-	
-	@Test
-	public void Ausleuchtung_getIntersections_returnsCorrecctIntersectionsForSquare() {
-		
-		// Arrange
-//		IAusleuchtung api = new Ausleuchtung();
-		
-		// Act
-//		boolean solutionValid = api.validateSolution("instances/validationInstances/Selbsttest_20a_incomplete.xml");
-		
-		// Assert
-//		assertTrue("Eine unzulässige Lösung wurde als zulässig gewertet.", !solutionValid);
-	}
-
 }
