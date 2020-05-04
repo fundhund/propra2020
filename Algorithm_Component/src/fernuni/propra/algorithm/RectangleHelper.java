@@ -1,5 +1,6 @@
-package fernuni.propra.file_processing;
+package fernuni.propra.algorithm;
 
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 public class RectangleHelper {
@@ -23,5 +24,11 @@ public class RectangleHelper {
     if (r1x2 < Float.MIN_VALUE) r1x2 = Float.MIN_VALUE;
     if (r1y2 < Float.MIN_VALUE) r1y2 = Float.MIN_VALUE;
     return new Rectangle2D.Float(r1x1, r1y1, (float) r1x2, (float) r1y2);
+	}
+	
+	public static Point2D.Float getCenter(Rectangle2D.Float rectangle) {
+		float x = (rectangle.x + rectangle.width) / 2;
+		float y = (rectangle.y + rectangle.height) / 2;
+		return new Point2D.Float(x, y);
 	}
 }

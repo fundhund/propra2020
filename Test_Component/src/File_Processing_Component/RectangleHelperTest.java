@@ -1,7 +1,9 @@
 package File_Processing_Component;
 
 import org.junit.Test;
-import fernuni.propra.file_processing.RectangleHelper;
+
+import fernuni.propra.algorithm.RectangleHelper;
+
 import static org.junit.Assert.*;
 import java.awt.geom.Rectangle2D;
 

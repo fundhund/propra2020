@@ -1,7 +1,8 @@
 package fernuni.propra.algorithm;
 
+import static fernuni.propra.algorithm.RectangleHelper.getIntersection;
+
 import java.awt.geom.Rectangle2D;
-import static fernuni.propra.file_processing.RectangleHelper.getIntersection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
