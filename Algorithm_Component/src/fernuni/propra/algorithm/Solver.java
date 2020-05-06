@@ -88,15 +88,38 @@ public class Solver {
 		return rectangleArray;
 	}
 	
-//	public static List<Lamp> getCandidateLamps(Room room) {
-//		
-//		return candidateLamps;
-//	}
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public static List<Lamp> getCandidateLamps(Room room) {
+		
+		Map<Rectangle2D.Float, Set<Integer>> intersectionsMap = getCandidateRectangles(room);
+		List<Lamp> candidateLamps = new ArrayList<>();
+		
+		Iterator<Entry<Rectangle2D.Float, Set<Integer>>> iterator = intersectionsMap.entrySet().iterator();
+    while (iterator.hasNext()) {
+    	
+        Map.Entry entry = (Map.Entry)iterator.next();
+        Rectangle2D.Float candidateRectangle = (Rectangle2D.Float) entry.getKey();
+        Set<Integer> involvedRectangles = (Set<Integer>) entry.getValue();
+        
+        candidateLamps.add(getCandidateLamp(candidateRectangle, involvedRectangles));
+        iterator.remove();
+    }
+		
+		return candidateLamps;
+	}
 	
-//	public static List<Lamp> getCandidateLamp(Rectangle2D.Float intersection, Set<Integer> rectangles) {
-//		
-//		return candidateLamp;
-//	}
+	public static Lamp getCandidateLamp(Rectangle2D.Float candidateRectangle, Set<Integer> involvedRectangles) {
+		
+		float x = candidateRectangle.x + candidateRectangle.width/2;
+		float y = candidateRectangle.y + candidateRectangle.height/2;
+		
+		Point2D.Float position = new Point2D.Float(x, y);
+		int[] rectangles = toSortedArray(involvedRectangles);
+		
+		Lamp candidateLamp = new Lamp(position, rectangles);
+		
+		return candidateLamp;
+	}
 	
 //	public static List<Lamp> reduceNumberOfLamps(List<Lamp> candidateLamps, )
 }

@@ -27,28 +27,6 @@ import fernuni.propra.test.TestHelper;
 
 public class SolverTest {
 	
-//	@Test
-//	public void Solver_getCandidateLamps_returnsCorrectLampForSquare() throws IncorrectShapeException {
-//		
-//		// Arrange
-//		String id = "id";
-//		List<Point2D.Float> corners = TestHelper.getCornersForSquare();
-//		Room room = new Room(id, corners);
-//		
-//		List<Lamp> expectedLamps = new ArrayList<>();
-//		expectedLamps.add(new Lamp(new Point2D.Float(1, 1)));
-//		
-//		// Act
-//		List<Lamp> actualLamps = Solver.getCandidateLamps(room);
-//		Lamp actualLamp = actualLamps.get(0);
-//		
-//		// Assert
-//		assertEquals("Did not return correct number of lamps", 1, actualLamps.size());
-//		assertEquals("Did not return correct lamp position", expectedLamps.get(0).getPosition(), actualLamp.getPosition());
-//		assertFalse("Did not return correct lamp state", actualLamp.isOn());
-//		assertEquals("Did not return correct number of illuminated rectangles", 4, actualLamp.getRectangles().length);
-//	}
-	
 	@Test
 	public void Solver_toSortedArray_convertsAndSortsIntegerSet() throws IncorrectShapeException {
 		
@@ -68,6 +46,25 @@ public class SolverTest {
 	}
 	
 	@Test
+	public void Solver_getCandidateRectangles_returnsCorrectIntersectionsForSquare() throws IncorrectShapeException {
+		
+		// Arrange
+		String id = "id";
+		List<Point2D.Float> corners = TestHelper.getCornersForSquare();
+		Room room = new Room(id, corners);
+		
+		Rectangle2D.Float expectedIntersection = new Rectangle2D.Float(0, 0, 2, 2);
+		Set<Integer> expectedInvolvedRectangles = new HashSet<>(Arrays.asList(0));
+		
+		// Act
+		Map<Rectangle2D.Float, Set<Integer>> actualIntersections = Solver.getCandidateRectangles(room);
+		
+		// Assert
+		assertEquals("Did not return correct number of rectangles", 1, actualIntersections.size());
+		assertEquals("Did not return correct involved rectangles", expectedInvolvedRectangles, actualIntersections.get(expectedIntersection));
+	}
+	
+	@Test
 	public void Solver_getCandidateRectangles_returnsCorrectIntersectionsForPlusShape() throws IncorrectShapeException {
 		
 		// Arrange
@@ -75,7 +72,7 @@ public class SolverTest {
 		List<Point2D.Float> corners = TestHelper.getCornersForPlusShape();
 		Room room = new Room(id, corners);
 		
-		Rectangle2D.Float expectedIntersection = new Rectangle2D.Float(1,1,1,1);
+		Rectangle2D.Float expectedIntersection = new Rectangle2D.Float(1, 1, 1, 1);
 		Set<Integer> expectedInvolvedRectangles = new HashSet<>(Arrays.asList(0, 1));
 		
 		// Act
@@ -106,5 +103,106 @@ public class SolverTest {
 		assertEquals("Did not return correct number of rectangles", 2, actualIntersections.size());
 		assertEquals("Did not return correct involved rectangles", expectedInvolvedRectangles1, actualIntersections.get(expectedIntersection1));
 		assertEquals("Did not return correct involved rectangles", expectedInvolvedRectangles2, actualIntersections.get(expectedIntersection2));
+	}
+	
+	@Test
+	public void Solver_getCandidateLamp_returnsCorrectLampForSquare() throws IncorrectShapeException {
+		
+		// Arrange
+		String id = "id";
+		List<Point2D.Float> corners = TestHelper.getCornersForSquare();
+		Room room = new Room(id, corners);
+		
+		Point2D.Float expectedPosition = new Point2D.Float(1, 1);
+		int[] expectedRectangles = new int[1];
+		expectedRectangles[0] = 0;
+		
+		Map<Rectangle2D.Float, Set<Integer>> intersectionsMap = Solver.getCandidateRectangles(room);
+		Rectangle2D.Float intersection = new Rectangle2D.Float(0, 0, 2, 2);
+
+		// Act
+		Lamp candidateLamp = Solver.getCandidateLamp(intersection, intersectionsMap.get(intersection));
+		int[] actualRectangles = candidateLamp.getRectangles();
+		Point2D.Float actualPosition = candidateLamp.getPosition();
+		
+		// Assert
+		assertEquals("Did not return correct number of rectangles", 1, actualRectangles.length);
+		assertTrue("Did not return correct rectangles", Arrays.equals(expectedRectangles, actualRectangles));
+		assertEquals("Did not return correct position", expectedPosition, actualPosition);
+	}
+
+	@Test
+	public void Solver_getCandidateLamps_returnsCorrectLampsForSquare() throws IncorrectShapeException {
+		
+		// Arrange
+		String id = "id";
+		List<Point2D.Float> corners = TestHelper.getCornersForSquare();
+		Room room = new Room(id, corners);
+		
+		Point2D.Float expectedPosition1 = new Point2D.Float(1, 1);
+		int[] expectedRectangles1 = {0};
+		
+		List<Lamp> expectedLamps = new ArrayList<>();
+		expectedLamps.add(new Lamp(expectedPosition1, expectedRectangles1));
+		
+		// Act
+		List<Lamp> actualLamps = Solver.getCandidateLamps(room);
+		
+		// Assert
+		assertEquals("Did not return correct number of lamps", 1, actualLamps.size());
+		for (Lamp expectedLamp : expectedLamps) {
+			assertTrue("Does not contain expected lamp", actualLamps.contains(expectedLamp));
+		}
+	}
+	
+	@Test
+	public void Solver_getCandidateLamps_returnsCorrectLampsForPlusShape() throws IncorrectShapeException {
+		
+		// Arrange
+		String id = "id";
+		List<Point2D.Float> corners = TestHelper.getCornersForPlusShape();
+		Room room = new Room(id, corners);
+		
+		Point2D.Float expectedPosition1 = new Point2D.Float(1.5f, 1.5f);
+		int[] expectedRectangles1 = {0, 1};
+		
+		List<Lamp> expectedLamps = new ArrayList<>();
+		expectedLamps.add(new Lamp(expectedPosition1, expectedRectangles1));
+		
+		// Act
+		List<Lamp> actualLamps = Solver.getCandidateLamps(room);
+		
+		// Assert
+		assertEquals("Did not return correct number of lamps", 1, actualLamps.size());
+		for (Lamp expectedLamp : expectedLamps) {
+			assertTrue("Does not contain expected lamp", actualLamps.contains(expectedLamp));
+		}
+	}
+	
+	@Test
+	public void Solver_getCandidateLamps_returnsCorrectLampsForArcShape() throws IncorrectShapeException {
+		
+		// Arrange
+		String id = "id";
+		List<Point2D.Float> corners = TestHelper.getCornersForArcShape();
+		Room room = new Room(id, corners);
+		
+		Point2D.Float expectedPosition1 = new Point2D.Float(0.5f, 1.5f);
+		int[] expectedRectangles1 = {0, 1};
+		Point2D.Float expectedPosition2 = new Point2D.Float(2.5f, 1.5f);
+		int[] expectedRectangles2 = {1, 2};
+		
+		List<Lamp> expectedLamps = new ArrayList<>();
+		expectedLamps.add(new Lamp(expectedPosition1, expectedRectangles1));
+		expectedLamps.add(new Lamp(expectedPosition2, expectedRectangles2));
+		
+		// Act
+		List<Lamp> actualLamps = Solver.getCandidateLamps(room);
+		
+		// Assert
+		assertEquals("Did not return correct number of lamps", 2, actualLamps.size());
+		for (Lamp expectedLamp : expectedLamps) {
+			assertTrue("Does not contain expected lamp", actualLamps.contains(expectedLamp));
+		}
 	}
 }

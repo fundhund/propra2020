@@ -3,6 +3,7 @@ package fernuni.propra.algorithm;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Lamp {
@@ -82,4 +83,36 @@ public class Lamp {
 	public int[] getRectangles() {
 		return rectangles;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (isOn ? 1231 : 1237);
+		result = prime * result + ((position == null) ? 0 : position.hashCode());
+		result = prime * result + Arrays.hashCode(rectangles);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Lamp other = (Lamp) obj;
+		if (isOn != other.isOn)
+			return false;
+		if (position == null) {
+			if (other.position != null)
+				return false;
+		} else if (!position.equals(other.position))
+			return false;
+		if (!Arrays.equals(rectangles, other.rectangles))
+			return false;
+		return true;
+	}
+	
 }
