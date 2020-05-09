@@ -22,6 +22,7 @@ public class RoomView extends JPanel {
 	private List<Point2D.Float> convertedLamps;
 	private float offsetX;
 	private float offsetY;
+	private float yMaxRoom;
 	private int margin = 40;
 	private float windowMin;
 	private float scale;
@@ -38,6 +39,7 @@ public class RoomView extends JPanel {
 		this.windowMin = windowMin - 100;
 		this.offsetX = room.getBoundaries().get("xMin");
 		this.offsetY = room.getBoundaries().get("yMin");
+		this.yMaxRoom = room.getBoundaries().get("yMax");
 		this.scale = calculateScale();
 		this.convertedCorners = createConvertedCorners();
 		this.convertedLamps = createConvertedLamps();
@@ -65,7 +67,7 @@ public class RoomView extends JPanel {
 				.stream()
 				.map(point -> new Point2D.Float(
 						(point.x - offsetX + margin) * scale, 
-						(point.y - offsetY + margin) * scale))
+						((yMaxRoom - point.y) - offsetY + margin) * scale))
 				.collect(Collectors.toList());
 		
 		return convertedPoints;
