@@ -57,6 +57,9 @@ public class Main {
 		if (mode.contains("d")) {
 			display(room, mode);
 		}
+		
+		XmlWriter xmlWriter = new XmlWriter(room);
+		xmlWriter.writeXml(inputFile.replace(".xml", "_solved.xml"));
 	}
 
 	private static void display(Room room, String mode) {
