@@ -1,7 +1,9 @@
 package fernuni.propra.user_interface;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Shape;
@@ -11,6 +13,8 @@ import java.awt.geom.Arc2D;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import fernuni.propra.file_processing.Room;
 
@@ -50,6 +54,10 @@ public class RoomView extends JPanel {
 		int width = (int) Math.ceil((room.getWidth() + 2 * margin) * scale);
 		int height = (int) Math.ceil((room.getHeight() + 2 * margin) * scale);
     setPreferredSize(new Dimension(width, height));
+    
+    JLabel numberOfLamps = createNumerOfLamps();
+    setLayout(new BorderLayout());
+    add(numberOfLamps, BorderLayout.PAGE_END);
 	}
 	
 	private List<Point2D.Float> createConvertedCorners() {
@@ -114,6 +122,15 @@ public class RoomView extends JPanel {
 				g2.draw(lamp);
 			});
 	}
+	
+	private JLabel createNumerOfLamps() {
+  	String labelText = "#Lamps: " + convertedLamps.size();
+  	JLabel label = new JLabel(labelText, JLabel.CENTER);
+  	label.setFont(new Font("Serif", Font.PLAIN, 14));
+  	label.setForeground(Color.WHITE);
+  	
+  	return label;
+  }
 	
 	@Override
 	public void paintComponent(Graphics g) {
