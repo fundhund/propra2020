@@ -17,72 +17,101 @@ public class TestHelper {
 		return r1.x == r2.x && r1.y == r2.y && r1.width == r2.width && r1.height == r2.height;
 	}
 	
+	/* SQUARE:
+	 *  ___
+	 * |   |
+	 * |___|
+	 */
 	public static List<Point2D.Float> getCornersForSquare(float sideLength) {
 		List<Point2D.Float> corners = new ArrayList<>();
-		corners.add(new Point2D.Float(0.0f, 0.0f));
-		corners.add(new Point2D.Float(sideLength, 0.0f));
+		corners.add(new Point2D.Float(0, 0));
+		corners.add(new Point2D.Float(sideLength, 0));
 		corners.add(new Point2D.Float(sideLength, sideLength));
-		corners.add(new Point2D.Float(0.0f, sideLength));
+		corners.add(new Point2D.Float(0, sideLength));
 		return corners;
 	}
 	
 	public static List<Point2D.Float> getCornersForSquare()  {
-		return getCornersForSquare(2.0f);
+		return getCornersForSquare(2);
 	}
 	
+	/* L SHAPE:
+	 *  _
+	 * | |
+	 * | |_
+	 * |___|
+	 */
 	public static List<Point2D.Float> getCornersForLShape(float sideLength) {
 		List<Point2D.Float> corners = new ArrayList<>();
-		corners.add(new Point2D.Float(0.0f, 0.0f));
-		corners.add(new Point2D.Float(sideLength, 0.0f));
+		corners.add(new Point2D.Float(0, 0));
+		corners.add(new Point2D.Float(sideLength, 0));
 		corners.add(new Point2D.Float(sideLength, sideLength/2));
 		corners.add(new Point2D.Float(sideLength/2, sideLength/2));
 		corners.add(new Point2D.Float(sideLength/2, sideLength));
-		corners.add(new Point2D.Float(0.0f, sideLength));
+		corners.add(new Point2D.Float(0, sideLength));
 		return corners;
 	}
 	
 	public static List<Point2D.Float> getCornersForLShape()  {
-		return getCornersForLShape(2.0f);
+		return getCornersForLShape(2);
 	}
 	
+	/* ARC SHAPE:
+	 *  _____
+	 * |  _  |
+	 * | | | |
+	 * |_| |_|
+	 */
 	public static List<Point2D.Float> getCornersForArcShape(float unit) {
 		List<Point2D.Float> corners = new ArrayList<>();
-		corners.add(new Point2D.Float(0.0f, 0.0f));
-		corners.add(new Point2D.Float(unit, 0.0f));
+		corners.add(new Point2D.Float(0, 0));
+		corners.add(new Point2D.Float(unit, 0));
 		corners.add(new Point2D.Float(unit, unit));
 		corners.add(new Point2D.Float(2 * unit, unit));
-		corners.add(new Point2D.Float(2 * unit, 0.0f));
-		corners.add(new Point2D.Float(3 * unit, 0.0f));
+		corners.add(new Point2D.Float(2 * unit, 0));
+		corners.add(new Point2D.Float(3 * unit, 0));
 		corners.add(new Point2D.Float(3 * unit, 2 * unit));
 		corners.add(new Point2D.Float(0, 2 * unit));
 		return corners;
 	}
 	
 	public static List<Point2D.Float> getCornersForArcShape()  {
-		return getCornersForArcShape(1.0f);
+		return getCornersForArcShape(1);
 	}
 	
+	/* Z SHAPE:
+	 *  ___
+	 * |_  |
+	 *   | |_
+	 *   |___|
+	 */
 	public static List<Point2D.Float> getCornersForZShape(float unit) {
 		List<Point2D.Float> corners = new ArrayList<>();
-		corners.add(new Point2D.Float(unit, 0.0f));
-		corners.add(new Point2D.Float(3 * unit, 0.0f));
+		corners.add(new Point2D.Float(unit, 0));
+		corners.add(new Point2D.Float(3 * unit, 0));
 		corners.add(new Point2D.Float(3 * unit, unit));
 		corners.add(new Point2D.Float(2 * unit, unit));
 		corners.add(new Point2D.Float(2 * unit, 3 * unit));
-		corners.add(new Point2D.Float(0.0f, 3 * unit));
-		corners.add(new Point2D.Float(0.0f, 2 * unit));
+		corners.add(new Point2D.Float(0, 3 * unit));
+		corners.add(new Point2D.Float(0, 2 * unit));
 		corners.add(new Point2D.Float(unit, 2 * unit));
 		return corners;
 	}
 	
 	public static List<Point2D.Float> getCornersForZShape()  {
-		return getCornersForZShape(1.0f);
+		return getCornersForZShape(1);
 	}
 	
+	/* PLUS SHAPE:
+	 *    _
+	 *  _| |_
+	 * |_   _|
+	 *   |_|
+	 */
 	public static List<Point2D.Float> getCornersForPlusShape(float unit) {
 		List<Point2D.Float> corners = new ArrayList<>();
-		corners.add(new Point2D.Float(unit, 0.0f));
-		corners.add(new Point2D.Float(2 * unit, 0.0f));
+		corners.add(new Point2D.Float(unit, 0));
+		corners.add(new Point2D.Float(2 * unit, 0));
 		corners.add(new Point2D.Float(2 * unit, unit));
 		corners.add(new Point2D.Float(3 * unit, unit));
 		corners.add(new Point2D.Float(3 * unit, 2 * unit));
@@ -90,14 +119,44 @@ public class TestHelper {
 		corners.add(new Point2D.Float(2 * unit, 3 * unit));
 		corners.add(new Point2D.Float(1 * unit, 3 * unit));
 		corners.add(new Point2D.Float(1 * unit, 2 * unit));
-		corners.add(new Point2D.Float(0.0f, 2 * unit));
-		corners.add(new Point2D.Float(0.0f, unit));
+		corners.add(new Point2D.Float(0, 2 * unit));
+		corners.add(new Point2D.Float(0, unit));
 		corners.add(new Point2D.Float(unit, unit));
 		return corners;
 	}
 	
 	public static List<Point2D.Float> getCornersForPlusShape()  {
-		return getCornersForPlusShape(1.0f);
+		return getCornersForPlusShape(1);
+	}
+	
+	/* OPEN RING SHAPE
+	 *  __________
+	 * |          |
+	 * |   ____   |
+	 * |  |    |  |
+	 * |  |_  _|  |
+	 * |    ||    |
+	 * |____||____|
+	 */
+	public static List<Point2D.Float> getCornersForOpenRingShape(float unit) {
+		List<Point2D.Float> corners = new ArrayList<>();
+		corners.add(new Point2D.Float(0, 0));
+		corners.add(new Point2D.Float(4 * unit, 0));
+		corners.add(new Point2D.Float(4 * unit, 3 * unit));
+		corners.add(new Point2D.Float(3 * unit, 3 * unit));
+		corners.add(new Point2D.Float(3 * unit, 6 * unit));
+		corners.add(new Point2D.Float(6 * unit, 6 * unit));
+		corners.add(new Point2D.Float(6 * unit, 3 * unit));
+		corners.add(new Point2D.Float(5 * unit, 3 * unit));
+		corners.add(new Point2D.Float(5 * unit, 0));
+		corners.add(new Point2D.Float(9 * unit, 0));
+		corners.add(new Point2D.Float(9 * unit, 9 * unit));
+		corners.add(new Point2D.Float(0, 9 * unit));
+		return corners;
+	}
+	
+	public static List<Point2D.Float> getCornersForOpenRingShape()  {
+		return getCornersForOpenRingShape(1);
 	}
 	
 	public static boolean containEqualLines(List<Line2D.Float> lines1, List<Line2D.Float> lines2) {

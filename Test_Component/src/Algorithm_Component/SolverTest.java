@@ -57,7 +57,8 @@ public class SolverTest {
 		Set<Integer> expectedInvolvedRectangles = new HashSet<>(Arrays.asList(0));
 		
 		// Act
-		Map<Rectangle2D.Float, Set<Integer>> actualIntersections = Solver.getCandidateRectangles(room);
+		Solver solver = new Solver(room);
+		Map<Rectangle2D.Float, Set<Integer>> actualIntersections = solver.createCandidateRectangles();
 		
 		// Assert
 		assertEquals("Did not return correct number of rectangles", 1, actualIntersections.size());
@@ -76,8 +77,9 @@ public class SolverTest {
 		Set<Integer> expectedInvolvedRectangles = new HashSet<>(Arrays.asList(0, 1));
 		
 		// Act
-		Map<Rectangle2D.Float, Set<Integer>> actualIntersections = Solver.getCandidateRectangles(room);
-		
+		Solver solver = new Solver(room);
+		Map<Rectangle2D.Float, Set<Integer>> actualIntersections = solver.createCandidateRectangles();
+	
 		// Assert
 		assertEquals("Did not return correct number of rectangles", 1, actualIntersections.size());
 		assertEquals("Did not return correct involved rectangles", expectedInvolvedRectangles, actualIntersections.get(expectedIntersection));
@@ -97,8 +99,9 @@ public class SolverTest {
 		Set<Integer> expectedInvolvedRectangles2 = new HashSet<>(Arrays.asList(1, 2));
 		
 		// Act
-		Map<Rectangle2D.Float, Set<Integer>> actualIntersections = Solver.getCandidateRectangles(room);
-		
+		Solver solver = new Solver(room);
+		Map<Rectangle2D.Float, Set<Integer>> actualIntersections = solver.createCandidateRectangles();
+	
 		// Assert
 		assertEquals("Did not return correct number of rectangles", 2, actualIntersections.size());
 		assertEquals("Did not return correct involved rectangles", expectedInvolvedRectangles1, actualIntersections.get(expectedIntersection1));
@@ -117,11 +120,12 @@ public class SolverTest {
 		int[] expectedRectangles = new int[1];
 		expectedRectangles[0] = 0;
 		
-		Map<Rectangle2D.Float, Set<Integer>> intersectionsMap = Solver.getCandidateRectangles(room);
+		Solver solver = new Solver(room);
+		Map<Rectangle2D.Float, Set<Integer>> intersectionsMap = solver.createCandidateRectangles();
 		Rectangle2D.Float intersection = new Rectangle2D.Float(0, 0, 2, 2);
 
 		// Act
-		Lamp candidateLamp = Solver.getCandidateLamp(intersection, intersectionsMap.get(intersection));
+		Lamp candidateLamp = solver.getCandidateLamp(intersection, intersectionsMap.get(intersection));
 		int[] actualRectangles = candidateLamp.getRectangles();
 		Point2D.Float actualPosition = candidateLamp.getPosition();
 		
@@ -145,8 +149,10 @@ public class SolverTest {
 		List<Lamp> expectedLamps = new ArrayList<>();
 		expectedLamps.add(new Lamp(expectedPosition1, expectedRectangles1));
 		
+		Solver solver = new Solver(room);
+		
 		// Act
-		List<Lamp> actualLamps = Solver.getCandidateLamps(room);
+		List<Lamp> actualLamps = solver.getCandidateLamps();
 		
 		// Assert
 		assertEquals("Did not return correct number of lamps", 1, actualLamps.size());
@@ -169,8 +175,10 @@ public class SolverTest {
 		List<Lamp> expectedLamps = new ArrayList<>();
 		expectedLamps.add(new Lamp(expectedPosition1, expectedRectangles1));
 		
+		Solver solver = new Solver(room);
+		
 		// Act
-		List<Lamp> actualLamps = Solver.getCandidateLamps(room);
+		List<Lamp> actualLamps = solver.getCandidateLamps();
 		
 		// Assert
 		assertEquals("Did not return correct number of lamps", 1, actualLamps.size());
@@ -196,13 +204,51 @@ public class SolverTest {
 		expectedLamps.add(new Lamp(expectedPosition1, expectedRectangles1));
 		expectedLamps.add(new Lamp(expectedPosition2, expectedRectangles2));
 		
+		Solver solver = new Solver(room);
+		
 		// Act
-		List<Lamp> actualLamps = Solver.getCandidateLamps(room);
+		List<Lamp> actualLamps = solver.getCandidateLamps();
 		
 		// Assert
 		assertEquals("Did not return correct number of lamps", 2, actualLamps.size());
 		for (Lamp expectedLamp : expectedLamps) {
 			assertTrue("Does not contain expected lamp", actualLamps.contains(expectedLamp));
+		}
+	}
+	
+	@Test
+	public void Solver_getCandidateLamps_returnsCorrectLampsForOpenRingShape() throws IncorrectShapeException {
+		
+		// Arrange
+		String id = "id";
+		List<Point2D.Float> corners = TestHelper.getCornersForOpenRingShape();
+		Room room = new Room(id, corners);
+		
+		Point2D.Float expectedPosition1 = new Point2D.Float(1.5f, 1.5f);
+		int[] expectedRectangles1 = {0, 1};
+		Point2D.Float expectedPosition2 = new Point2D.Float(1.5f, 7.5f);
+		int[] expectedRectangles2 = {1, 2};
+		Point2D.Float expectedPosition3 = new Point2D.Float(7.5f, 7.5f);
+		int[] expectedRectangles3 = {2, 3};
+		Point2D.Float expectedPosition4 = new Point2D.Float(7.5f, 1.5f);
+		int[] expectedRectangles4 = {3, 4};
+		
+		List<Lamp> expectedLamps = new ArrayList<>();
+		expectedLamps.add(new Lamp(expectedPosition1, expectedRectangles1));
+		expectedLamps.add(new Lamp(expectedPosition2, expectedRectangles2));
+		expectedLamps.add(new Lamp(expectedPosition3, expectedRectangles3));
+		expectedLamps.add(new Lamp(expectedPosition4, expectedRectangles4));
+		
+		Solver solver = new Solver(room);
+		
+		// Act
+		List<Lamp> actualLamps = solver.getCandidateLamps();
+		actualLamps.stream().forEach(System.out::println);
+		
+		// Assert
+		assertEquals("Did not return correct number of lamps", 4, actualLamps.size());
+		for (Lamp expectedLamp : expectedLamps) {
+			assertTrue("Does not contain expected lamp: " + expectedLamp.toString(), actualLamps.contains(expectedLamp));
 		}
 	}
 }

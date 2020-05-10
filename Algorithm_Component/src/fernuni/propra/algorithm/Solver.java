@@ -18,8 +18,18 @@ import java.util.Set;
 import fernuni.propra.file_processing.Room;
 
 public class Solver {
+	
+	private Room room;
+	private int numberOfWalls;
+	private List<Lamp> lamps;
 
-	public static Map<Rectangle2D.Float, Set<Integer>> getCandidateRectangles(Room room) {
+	public Solver(Room room) {
+		this.room = room;
+		this.numberOfWalls = room.getWalls().size();
+		this.lamps = createLamps();
+	}
+
+	public Map<Rectangle2D.Float, Set<Integer>> createCandidateRectangles() {
 			
 		Rectangle2D.Float[] rectangles = room.getRectangles();
 		List<Rectangle2D.Float> intersections = new ArrayList<>();
@@ -89,9 +99,9 @@ public class Solver {
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static List<Lamp> getCandidateLamps(Room room) {
+	public List<Lamp> getCandidateLamps() {
 		
-		Map<Rectangle2D.Float, Set<Integer>> intersectionsMap = getCandidateRectangles(room);
+		Map<Rectangle2D.Float, Set<Integer>> intersectionsMap = createCandidateRectangles();
 		List<Lamp> candidateLamps = new ArrayList<>();
 		
 		Iterator<Entry<Rectangle2D.Float, Set<Integer>>> iterator = intersectionsMap.entrySet().iterator();
@@ -108,7 +118,7 @@ public class Solver {
 		return candidateLamps;
 	}
 	
-	public static Lamp getCandidateLamp(Rectangle2D.Float candidateRectangle, Set<Integer> involvedRectangles) {
+	public Lamp getCandidateLamp(Rectangle2D.Float candidateRectangle, Set<Integer> involvedRectangles) {
 		
 		float x = candidateRectangle.x + candidateRectangle.width/2;
 		float y = candidateRectangle.y + candidateRectangle.height/2;
@@ -119,6 +129,10 @@ public class Solver {
 		Lamp candidateLamp = new Lamp(position, rectangles);
 		
 		return candidateLamp;
+	}
+	
+	public List<Lamp> createLamps() {
+		return getCandidateLamps();
 	}
 	
 //	public static List<Lamp> reduceNumberOfLamps(List<Lamp> candidateLamps, )

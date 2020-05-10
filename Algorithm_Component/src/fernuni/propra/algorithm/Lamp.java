@@ -114,5 +114,9 @@ public class Lamp {
 			return false;
 		return true;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "Lamp [position=" + position + ", isOn=" + isOn + ", rectangles=" + Arrays.toString(rectangles) + "]";
+	}
 }
