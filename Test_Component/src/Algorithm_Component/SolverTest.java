@@ -147,7 +147,7 @@ public class SolverTest {
 		int[] expectedRectangles1 = {0};
 		
 		List<Lamp> expectedLamps = new ArrayList<>();
-		expectedLamps.add(new Lamp(expectedPosition1, expectedRectangles1));
+		expectedLamps.add(new Lamp(expectedPosition1, true, expectedRectangles1));
 		
 		Solver solver = new Solver(room);
 		
@@ -173,7 +173,7 @@ public class SolverTest {
 		int[] expectedRectangles1 = {0, 1};
 		
 		List<Lamp> expectedLamps = new ArrayList<>();
-		expectedLamps.add(new Lamp(expectedPosition1, expectedRectangles1));
+		expectedLamps.add(new Lamp(expectedPosition1, true, expectedRectangles1));
 		
 		Solver solver = new Solver(room);
 		
@@ -201,8 +201,8 @@ public class SolverTest {
 		int[] expectedRectangles2 = {1, 2};
 		
 		List<Lamp> expectedLamps = new ArrayList<>();
-		expectedLamps.add(new Lamp(expectedPosition1, expectedRectangles1));
-		expectedLamps.add(new Lamp(expectedPosition2, expectedRectangles2));
+		expectedLamps.add(new Lamp(expectedPosition1, true, expectedRectangles1));
+		expectedLamps.add(new Lamp(expectedPosition2, true, expectedRectangles2));
 		
 		Solver solver = new Solver(room);
 		
@@ -234,21 +234,54 @@ public class SolverTest {
 		int[] expectedRectangles4 = {3, 4};
 		
 		List<Lamp> expectedLamps = new ArrayList<>();
-		expectedLamps.add(new Lamp(expectedPosition1, expectedRectangles1));
-		expectedLamps.add(new Lamp(expectedPosition2, expectedRectangles2));
-		expectedLamps.add(new Lamp(expectedPosition3, expectedRectangles3));
-		expectedLamps.add(new Lamp(expectedPosition4, expectedRectangles4));
+		expectedLamps.add(new Lamp(expectedPosition1, true, expectedRectangles1));
+		expectedLamps.add(new Lamp(expectedPosition2, true, expectedRectangles2));
+		expectedLamps.add(new Lamp(expectedPosition3, true, expectedRectangles3));
+		expectedLamps.add(new Lamp(expectedPosition4, true, expectedRectangles4));
 		
 		Solver solver = new Solver(room);
 		
 		// Act
 		List<Lamp> actualLamps = solver.getCandidateLamps();
-		actualLamps.stream().forEach(System.out::println);
 		
 		// Assert
 		assertEquals("Did not return correct number of lamps", 4, actualLamps.size());
 		for (Lamp expectedLamp : expectedLamps) {
 			assertTrue("Does not contain expected lamp: " + expectedLamp.toString(), actualLamps.contains(expectedLamp));
 		}
+	}
+		
+	@Test
+	public void Solver_getCandidateLamps_returnsCorrectReducedLampsForOpenRingShape() throws IncorrectShapeException {
+		
+		// Arrange
+		String id = "id";
+		List<Point2D.Float> corners = TestHelper.getCornersForOpenRingShape();
+		Room room = new Room(id, corners);
+		int expectedNumerOfLamps = 3;
+		Solver solver = new Solver(room);
+		
+		// Act
+		int actualNumberOfLamps = solver.solve();
+		
+		// Assert
+		assertEquals("Did not return correct number of lamps", expectedNumerOfLamps, actualNumberOfLamps);
+	}
+	
+	@Test
+	public void Solver_getCandidateLamps_returnsCorrectReducedLampsForZShape() throws IncorrectShapeException {
+		
+		// Arrange
+		String id = "id";
+		List<Point2D.Float> corners = TestHelper.getCornersForZShape();
+		Room room = new Room(id, corners);
+		int expectedNumerOfLamps = 2;
+		Solver solver = new Solver(room);
+		
+		// Act
+		int actualNumberOfLamps = solver.solve();
+		
+		// Assert
+		assertEquals("Did not return correct number of lamps", expectedNumerOfLamps, actualNumberOfLamps);
 	}
 }

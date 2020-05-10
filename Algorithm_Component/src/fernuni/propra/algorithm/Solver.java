@@ -14,19 +14,32 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import fernuni.propra.file_processing.Room;
 
 public class Solver {
 	
 	private Room room;
-	private int numberOfWalls;
+	private int[] rectangleIndices;
 	private List<Lamp> lamps;
+	private int numberOfLamps;
 
 	public Solver(Room room) {
 		this.room = room;
-		this.numberOfWalls = room.getWalls().size();
-		this.lamps = createLamps();
+		this.rectangleIndices = IntStream.range(0, room.getRectangles().length).toArray();
+		this.lamps = getCandidateLamps();
+		this.numberOfLamps = lamps.size();
+	}
+
+	public List<Lamp> getLamps() {
+		return lamps;
+	}
+
+	public void setLamps(List<Lamp> lamps) {
+		this.lamps = new ArrayList<>(lamps);
+		this.numberOfLamps = lamps.size();
 	}
 
 	public Map<Rectangle2D.Float, Set<Integer>> createCandidateRectangles() {
@@ -126,14 +139,72 @@ public class Solver {
 		Point2D.Float position = new Point2D.Float(x, y);
 		int[] rectangles = toSortedArray(involvedRectangles);
 		
-		Lamp candidateLamp = new Lamp(position, rectangles);
+		Lamp candidateLamp = new Lamp(position, true, rectangles);
 		
 		return candidateLamp;
 	}
 	
-	public List<Lamp> createLamps() {
-		return getCandidateLamps();
+	
+	public int solve() {
+		List<Lamp> switchedOffLamps = getCandidateLamps();
+		switchedOffLamps.stream().forEach(lamp -> lamp.switchOff());
+		
+		Map<Integer, Integer> rectangleIlluminationMap = new HashMap<>();
+		Arrays.stream(rectangleIndices).forEach(index -> rectangleIlluminationMap.put(index, 0));
+		
+		reduceLamps(switchedOffLamps, 0, rectangleIlluminationMap);
+		
+		return numberOfLamps;
 	}
 	
-//	public static List<Lamp> reduceNumberOfLamps(List<Lamp> candidateLamps, )
+	public void reduceLamps(List<Lamp> candidateLamps, int index, Map<Integer, Integer> rectangleIlluminationMap) {
+		
+		if (isRoomIlluminated(rectangleIlluminationMap)) {
+			System.out.println("solved for index " + index);
+			setLamps(candidateLamps
+					.stream()
+					.filter(lamp -> lamp.isOn())
+					.collect(Collectors.toList()));
+			printLamps(lamps);
+			return;
+		}
+		
+		if (index >= candidateLamps.size()) return;
+		
+		if (getNumberOfSwitchedOnLamps(candidateLamps) < numberOfLamps) {
+			
+			Lamp currentLamp = candidateLamps.get(index);
+			int[] currentRectangleIndices = currentLamp.getRectangles();
+			
+			currentLamp.switchOn();
+			
+			Arrays.stream(currentRectangleIndices)
+				.forEach(rectangleIndex -> {
+					rectangleIlluminationMap.merge(rectangleIndex, 1, (a, b) -> a + b);
+				});
+		
+			reduceLamps(new ArrayList<>(candidateLamps), index + 1, new HashMap<>(rectangleIlluminationMap));
+		
+			currentLamp.switchOff();
+			
+			Arrays.stream(currentRectangleIndices)
+				.forEach(rectangleIndex -> {
+					rectangleIlluminationMap.merge(rectangleIndex, 1, (a, b) -> a - b);
+				});
+			
+			reduceLamps(new ArrayList<>(candidateLamps), index + 1, new HashMap<>(rectangleIlluminationMap));
+		}
+	}
+	
+	public boolean isRoomIlluminated(Map<Integer, Integer> rectangleIlluminationMap) {
+		return Arrays.stream(rectangleIndices).allMatch(index -> rectangleIlluminationMap.get(index) > 0);
+	}
+	
+	public int getNumberOfSwitchedOnLamps(List<Lamp> lamps) {
+		return (int) lamps.stream().filter(lamp -> lamp.isOn()).count();
+	}
+	
+	public void printLamps(List<Lamp> lamps) {
+		lamps.stream().forEach(System.out::println);
+	}
 }
