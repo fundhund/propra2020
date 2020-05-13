@@ -25,6 +25,12 @@ public class Solver {
 	private int[] rectangleIndices;
 	private List<Lamp> lamps;
 	private int numberOfLamps;
+	private long endTime = 0;
+	private int timeLimit = 0;
+
+	public void setTimeLimit(int timeLimit) {
+		this.timeLimit = timeLimit;
+	}
 
 	public Solver(Room room) {
 		this.room = room;
@@ -144,28 +150,38 @@ public class Solver {
 		return candidateLamp;
 	}
 	
+	public int solve() throws TimeLimitExceededException {
+		return solve(0);
+	}
 	
-	public int solve() {
+	public int solve(int timeLimit) throws TimeLimitExceededException {
 		List<Lamp> switchedOffLamps = getCandidateLamps();
 		switchedOffLamps.stream().forEach(lamp -> lamp.switchOff());
 		
 		Map<Integer, Integer> rectangleIlluminationMap = new HashMap<>();
 		Arrays.stream(rectangleIndices).forEach(index -> rectangleIlluminationMap.put(index, 0));
 		
+		if (timeLimit > 0) {
+			this.timeLimit = timeLimit;
+			this.endTime = System.currentTimeMillis() + timeLimit * 1000;
+		}
+		
 		reduceLamps(switchedOffLamps, 0, rectangleIlluminationMap);
 		
 		return numberOfLamps;
 	}
 	
-	public void reduceLamps(List<Lamp> candidateLamps, int index, Map<Integer, Integer> rectangleIlluminationMap) {
+	public void reduceLamps(List<Lamp> candidateLamps, int index, Map<Integer, Integer> rectangleIlluminationMap) throws TimeLimitExceededException {
+		
+		if (endTime > 0 && System.currentTimeMillis() > endTime) {
+			throw new TimeLimitExceededException("Computation took longer than the set time limit of " + timeLimit + " seconds.");
+		}
 		
 		if (isRoomIlluminated(rectangleIlluminationMap)) {
-			System.out.println("solved for index " + index);
 			setLamps(candidateLamps
 					.stream()
 					.filter(lamp -> lamp.isOn())
 					.collect(Collectors.toList()));
-			printLamps(lamps);
 			return;
 		}
 		

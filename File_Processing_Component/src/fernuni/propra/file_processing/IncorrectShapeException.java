@@ -1,7 +1,12 @@
 package fernuni.propra.file_processing;
 
 public class IncorrectShapeException extends Exception {
-  public IncorrectShapeException(String errorMessage) {
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public IncorrectShapeException(String errorMessage) {
     super(errorMessage);
   }
 }

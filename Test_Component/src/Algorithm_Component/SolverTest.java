@@ -21,6 +21,7 @@ import fernuni.propra.algorithm.Ausleuchtung;
 import fernuni.propra.algorithm.IAusleuchtung;
 import fernuni.propra.algorithm.Lamp;
 import fernuni.propra.algorithm.Solver;
+import fernuni.propra.algorithm.TimeLimitExceededException;
 import fernuni.propra.file_processing.IncorrectShapeException;
 import fernuni.propra.file_processing.Room;
 import fernuni.propra.test.TestHelper;
@@ -252,7 +253,7 @@ public class SolverTest {
 	}
 		
 	@Test
-	public void Solver_getCandidateLamps_returnsCorrectReducedLampsForOpenRingShape() throws IncorrectShapeException {
+	public void Solver_getCandidateLamps_returnsCorrectReducedLampsForOpenRingShape() throws IncorrectShapeException, TimeLimitExceededException {
 		
 		// Arrange
 		String id = "id";
@@ -269,7 +270,7 @@ public class SolverTest {
 	}
 	
 	@Test
-	public void Solver_getCandidateLamps_returnsCorrectReducedLampsForZShape() throws IncorrectShapeException {
+	public void Solver_getCandidateLamps_returnsCorrectReducedLampsForZShape() throws IncorrectShapeException, TimeLimitExceededException {
 		
 		// Arrange
 		String id = "id";
