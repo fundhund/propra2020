@@ -41,12 +41,14 @@ public class XmlWriter {
       
       document.setContent(raum);
       
-      FileWriter writer = new FileWriter(fileName);
-      XMLOutputter outputter = new XMLOutputter();
-      outputter.setFormat(Format.getPrettyFormat());
-      outputter.output(document, writer);
-      outputter.output(document, System.out);
-      writer.close();
+      FileWriter fileWriter = new FileWriter(fileName);
+      XMLOutputter xmlOutputter = new XMLOutputter();
+      xmlOutputter.setFormat(Format.getPrettyFormat());
+      xmlOutputter.output(document, fileWriter);
+      
+      System.out.println("Saved solution as '" + fileName + "'.");
+      
+      fileWriter.close();
 	}
 	
 	private Element createXmlListOfPoints(String parentName, String childName, List<Point2D.Float> points) {
