@@ -3,13 +3,16 @@ package fernuni.propra.algorithm;
 import static fernuni.propra.algorithm.RectangleHelper.getIntersection;
 
 import java.awt.geom.Rectangle2D;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.jdom2.JDOMException;
 
 import fernuni.propra.file_processing.Room;
+import fernuni.propra.file_processing.XmlReader;
 
 /**
  * Diese Klasse wird als API (Application Programming Interaface) verwendet. Das
@@ -30,7 +33,21 @@ public class Ausleuchtung implements IAusleuchtung {
 	 */
 	@Override
 	public boolean validateSolution(String xmlFile) {
-		// TODO Logik implementieren
+		
+		if (xmlFile == "" || !new File(xmlFile).isFile()) return false;
+		
+		try {
+			
+			XmlReader xmlReader = new XmlReader(xmlFile);
+			Room room = xmlReader.createRoom();
+			
+			Validator validator = new Validator(room);
+			return validator.validate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		return false;
 	}
 
