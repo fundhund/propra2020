@@ -155,6 +155,9 @@ public class Solver {
 	}
 	
 	public int solve(int timeLimit) throws TimeLimitExceededException {
+		
+		long startTime = System.currentTimeMillis();
+		
 		List<Lamp> switchedOffLamps = getCandidateLamps();
 		switchedOffLamps.stream().forEach(lamp -> lamp.switchOff());
 		
@@ -163,10 +166,12 @@ public class Solver {
 		
 		if (timeLimit > 0) {
 			this.timeLimit = timeLimit;
-			this.endTime = System.currentTimeMillis() + timeLimit * 1000;
+			this.endTime = startTime + timeLimit * 1000;
 		}
 		
 		reduceLamps(switchedOffLamps, 0, rectangleIlluminationMap);
+		
+		System.out.println("Solved in " + ((System.currentTimeMillis() - startTime)/1000f) + " seconds.");
 		
 		return numberOfLamps;
 	}

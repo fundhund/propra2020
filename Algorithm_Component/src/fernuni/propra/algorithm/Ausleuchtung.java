@@ -59,7 +59,21 @@ public class Ausleuchtung implements IAusleuchtung {
 	 */
 	@Override
 	public int solve(String xmlFile, int timeLimit) {
-		// TODO Logik implementieren
+		
+		if (xmlFile == "" || !new File(xmlFile).isFile()) return 0;
+		
+		try {
+			
+			XmlReader xmlReader = new XmlReader(xmlFile);
+			Room room = xmlReader.createRoom();
+			
+			Solver solver = new Solver(room);
+			return solver.solve(timeLimit);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		return 0;
 	}
 }
