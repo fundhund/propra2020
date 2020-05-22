@@ -85,15 +85,15 @@ public class Solver {
 						involvedRectangles.addAll(intersectionsMap.get(current));
 						involvedRectangles.addAll(intersectionsMap.get(candidate));
 						
-						obsoleteIntersections.add(current);
-						obsoleteIntersections.add(candidate);
+						if (!intersection.equals(current)) obsoleteIntersections.add(current);
+						if (!intersection.equals(candidate)) obsoleteIntersections.add(candidate);
 						
 						foundNewIntersections = true;
 						intersectionsMap.put(intersection, involvedRectangles);
 					}
 				}
 			}
-						
+			
 			obsoleteIntersections
 			.stream()
 			.forEach(intersection -> intersectionsMap.remove(intersection));
@@ -158,7 +158,7 @@ public class Solver {
 		
 		long startTime = System.currentTimeMillis();
 		
-		List<Lamp> switchedOffLamps = getCandidateLamps();
+		List<Lamp> switchedOffLamps = new ArrayList<>(this.lamps);
 		switchedOffLamps.stream().forEach(lamp -> lamp.switchOff());
 		
 		Map<Integer, Integer> rectangleIlluminationMap = new HashMap<>();
