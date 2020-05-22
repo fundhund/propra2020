@@ -62,4 +62,26 @@ public class API_Test_Solution {
 		// Assert
 		assertEquals("Inkorrekte Lösung ausgegeben.", expectedNumberOfLamps, actualNumberOfLamps);
 	}
+	
+	@Test
+	public void solves100a() {
+		// Arrange
+		IAusleuchtung api = new Ausleuchtung();
+		int expectedNumberOfLamps = 17;
+		// Act
+		int actualNumberOfLamps = api.solve("instances/validationInstances/Selbsttest_100a.xml", 0);
+		// Assert
+		assertEquals("Inkorrekte Lösung ausgegeben.", expectedNumberOfLamps, actualNumberOfLamps);
+	}
+	
+	@Test
+	public void solves100b() {
+		// Arrange
+		IAusleuchtung api = new Ausleuchtung();
+		int expectedNumberOfLamps = 16;
+		// Act
+		int actualNumberOfLamps = api.solve("instances/validationInstances/Selbsttest_100b.xml", 0);
+		// Assert
+		assertEquals("Inkorrekte Lösung ausgegeben.", expectedNumberOfLamps, actualNumberOfLamps);
+	}
 }

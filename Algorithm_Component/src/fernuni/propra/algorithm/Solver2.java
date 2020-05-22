@@ -19,7 +19,7 @@ import java.util.stream.IntStream;
 
 import fernuni.propra.file_processing.Room;
 
-public class Solver {
+public class Solver2 {
 	
 	private Room room;
 	private int[] rectangleIndices;
@@ -32,7 +32,7 @@ public class Solver {
 		this.timeLimit = timeLimit;
 	}
 
-	public Solver(Room room) {
+	public Solver2(Room room) {
 		this.room = room;
 		this.rectangleIndices = IntStream.range(0, room.getRectangles().length).toArray();
 		this.lamps = getCandidateLamps();
@@ -77,9 +77,9 @@ public class Solver {
 		int iteration = 1;
 		
 		do {
-//			System.out.println();
-//			System.out.println("===========================");
-//			System.out.println("Iteration " + iteration);
+			System.out.println();
+			System.out.println("===========================");
+			System.out.println("Iteration " + iteration);
 			
 			foundNewIntersections = false;
 			obsoleteIntersections = new ArrayList<>();
@@ -106,64 +106,35 @@ public class Solver {
 								&& !obsoleteIntersections.contains(current)) obsoleteIntersections.add(current);
 						if (!intersection.equals(candidate) 
 								&& !obsoleteIntersections.contains(candidate)) obsoleteIntersections.add(candidate);
-						
 						obsoleteIntersections.remove(intersection);
 						
 						foundNewIntersections = true;
-						
-						if (intersectionsMap.containsKey(intersection)) involvedRectangles.addAll(intersectionsMap.get(intersection));
-							
 						intersectionsMap.put(intersection, involvedRectangles);
-						
-//						if (intersectionsMap.get(current).contains(4)) {
-//							System.out.println("HERE'S 4:");
-//							System.out.println(current.toString() + " -> " + intersectionsMap.get(current));
-//							System.out.println("+ " + candidate.toString() + " -> " + intersectionsMap.get(candidate));
-//							System.out.println("= " + intersection.toString() + " -> " + intersectionsMap.get(intersection));
-//							System.out.println("OBSOLETE CONTAINS INTERSECTION: " + obsoleteIntersections.contains(intersection));
-//							System.out.println();
-//							
-//							System.out.println();
-//							System.out.println("INNER LOOP:");
-//							intersectionsMap.entrySet().forEach(entry->{
-//						    System.out.println(entry.getKey() + " " + entry.getValue());  
-//							});
-//							
-//						}
 					}
-					
-//					if (intersectionsMap.get(current).contains(4)) {
-//						System.out.println();
-//						System.out.println("OUTER LOOP:");
-//						intersectionsMap.entrySet().forEach(entry->{
-//					    System.out.println(entry.getKey() + " " + entry.getValue());  
-//						});
-//						
-//					}
 				}
 			}
 			
-//			System.out.println();
-//			System.out.println("BEFORE DELETE OBSOLETE");
-//			intersectionsMap.entrySet().forEach(entry->{
-//		    System.out.println(entry.getKey() + " " + entry.getValue());  
-//			});
-//			
-//			System.out.println();
-//			System.out.println("OBSOLETE LIST");
-//			obsoleteIntersections.stream().forEach(r->{
-//		    System.out.println(r.toString() + " -> " + intersectionsMap.get(r));  
-//			});
+			System.out.println();
+			System.out.println("BEFORE DELETE OBSOLETE");
+			intersectionsMap.entrySet().forEach(entry->{
+		    System.out.println(entry.getKey() + " " + entry.getValue());  
+			});
+			
+			System.out.println();
+			System.out.println("OBSOLETE LIST");
+			obsoleteIntersections.stream().forEach(r->{
+		    System.out.println(r.toString() + " -> " + intersectionsMap.get(r));  
+			});
 			
 			obsoleteIntersections
 			.stream()
 			.forEach(intersection -> intersectionsMap.remove(intersection));
 			
-//			System.out.println();
-//			System.out.println("AFTER DELETE OBSOLETE");
-//			intersectionsMap.entrySet().forEach(entry->{
-//		    System.out.println(entry.getKey() + " " + entry.getValue());  
-//			});
+			System.out.println();
+			System.out.println("AFTER DELETE OBSOLETE");
+			intersectionsMap.entrySet().forEach(entry->{
+		    System.out.println(entry.getKey() + " " + entry.getValue());  
+			});
 			
 			iteration++;
 		} while (foundNewIntersections);

@@ -61,7 +61,9 @@ public class Main {
 		
 		if (mode.contains("s")) {
 			
-			int timeLimit = (int) params.get("timeLimit");
+			int timeLimit = params.containsKey("timeLimit") && params.get("timeLimit") != null 
+					? (int) params.get("timeLimit") 
+					: 0;
 			
 			Solver solver = new Solver(room);
 			solver.solve(timeLimit);
