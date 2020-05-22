@@ -29,4 +29,15 @@ public class API_Test_Solution {
 		// Assert
 		assertEquals("Ohne Angabe einer Datei wurde eine zulässige Lösung gefunden.", expectedNumberOfLamps, actualNumberOfLamps);
 	}
+	
+	@Test
+	public void solves20a() {
+		// Arrange
+		IAusleuchtung api = new Ausleuchtung();
+		int expectedNumberOfLamps = 2;
+		// Act
+		int actualNumberOfLamps = api.solve("instances/validationInstances/Selbsttest_20a.xml", 0);
+		// Assert
+		assertEquals("Inkorrekte Lösung ausgegeben.", expectedNumberOfLamps, actualNumberOfLamps);
+	}
 }
