@@ -42,6 +42,16 @@ public class Solver {
 	public List<Lamp> getLamps() {
 		return lamps;
 	}
+	
+	public List<Point2D.Float> getLampPositions() {
+		List<Point2D.Float> lampPositions = new ArrayList<>();
+		
+		for (Lamp lamp : lamps) {
+			lampPositions.add(lamp.getPosition());
+		}
+		
+		return lampPositions;
+	}
 
 	public void setLamps(List<Lamp> lamps) {
 		this.lamps = new ArrayList<>(lamps);
@@ -61,7 +71,7 @@ public class Solver {
 		for (int k = 0; k < rectangles.length; k++) {
 			intersectionsMap.put(rectangles[k], new HashSet<>(Arrays.asList(k)));
 		}
-		
+				
 		List<Rectangle2D.Float> obsoleteIntersections = new ArrayList<>();
 		
 		do {
@@ -87,6 +97,7 @@ public class Solver {
 						
 						if (!intersection.equals(current)) obsoleteIntersections.add(current);
 						if (!intersection.equals(candidate)) obsoleteIntersections.add(candidate);
+						obsoleteIntersections.remove(intersection);
 						
 						foundNewIntersections = true;
 						intersectionsMap.put(intersection, involvedRectangles);
@@ -181,6 +192,14 @@ public class Solver {
 		if (endTime > 0 && System.currentTimeMillis() > endTime) {
 			throw new TimeLimitExceededException("Computation took longer than the set time limit of " + timeLimit + " seconds.");
 		}
+		
+		System.out.println("LAMPS:");
+		for (Lamp lamp : candidateLamps) {
+			if (lamp.isOn()) System.out.println(lamp.getPosition().toString() + ", " + Arrays.toString(lamp.getRectangles()));
+		}
+		System.out.println(isRoomIlluminated(rectangleIlluminationMap));
+		System.out.println();
+		
 		
 		if (isRoomIlluminated(rectangleIlluminationMap)) {
 			setLamps(candidateLamps

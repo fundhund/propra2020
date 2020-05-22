@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import org.jdom2.JDOMException;
+
+import fernuni.propra.algorithm.Solver;
+import fernuni.propra.algorithm.TimeLimitExceededException;
 import fernuni.propra.file_processing.*;
 import fernuni.propra.user_interface.UserInterface;
 
@@ -32,13 +35,15 @@ public class Main {
 	 * @throws IOException 
 	 * @throws JDOMException 
 	 * @throws IncorrectShapeException 
+	 * @throws TimeLimitExceededException 
 	 */
-	public static void main(String[] args) throws JDOMException, IOException, IncorrectShapeException {
+	public static void main(String[] args) throws JDOMException, IOException, IncorrectShapeException, TimeLimitExceededException {
 			
 		HashMap<String, Object> params = getParams(args);
 		System.out.println(params);
 		
-		String inputFile = (String) params.get("inputFile");
+//		String inputFile = (String) params.get("inputFile");
+		String inputFile = "instances/validationInstances/Selbsttest_20a.xml";
 		
 		XmlReader xmlReader = new XmlReader(inputFile);
 		Room room = xmlReader.createRoom();
@@ -53,6 +58,15 @@ public class Main {
 				.findFirst()
 				.get()
 				.split("=")[1];
+		
+		if (mode.contains("s")) {
+			
+			int timeLimit = (int) params.get("timeLimit");
+			
+			Solver solver = new Solver(room);
+			solver.solve(timeLimit);
+			room.setLamps(solver.getLampPositions());
+		}
 		
 		if (mode.contains("d")) {
 			display(room, mode);
