@@ -1,0 +1,12 @@
+In diesem Verzeichnis finden Sie Probleminstanzen, die Sie zum Debuggen und zur Implementierung von Tests verwenden können.
+Eine Referenz-Implementierung fand Lösungen mit den unten aufgeführten Daten. 
+
+Instanz			#Lampen		Rechenzeit
+Selbsttest_20a	2			<1 Sekunde
+Selbsttest_20b	2			<1 Sekunde
+Selbsttest_20c	1			<1 Sekunde
+Selbsttest_100a	17			~15 Sekunden
+Selbsttest_100b 16			~10 Sekuden
+
+Die Rechenzeiten sind natürlich von der eingesetzten Hardware abhängig und dienen somit nur als ein grober Anhaltspunkt.
+Experimente wurden mit einem Intel Core i7 Prozessor (4 Kerne, 1.3GHz) und 16GB RAM durchgeführt.
