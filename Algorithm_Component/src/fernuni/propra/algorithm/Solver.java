@@ -239,7 +239,7 @@ public class Solver {
 		
 		reduceLamps(switchedOffLamps, 0, rectangleIlluminationMap);
 		
-		System.out.println("Solved in " + ((System.currentTimeMillis() - startTime)/1000f) + " seconds.");
+		System.out.println("Solved with " + numberOfLamps + " lamp(s) in " + ((System.currentTimeMillis() - startTime)/1000f) + " seconds.");
 		
 		return numberOfLamps;
 	}

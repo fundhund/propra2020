@@ -1,13 +1,17 @@
 package fernuni.propra.main;
 
 import java.awt.EventQueue;
+import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+
 import org.jdom2.JDOMException;
 
 import fernuni.propra.algorithm.Solver;
 import fernuni.propra.algorithm.TimeLimitExceededException;
+import fernuni.propra.algorithm.Validator;
 import fernuni.propra.file_processing.*;
 import fernuni.propra.user_interface.UserInterface;
 
@@ -68,14 +72,40 @@ public class Main {
 			Solver solver = new Solver(room);
 			solver.solve(timeLimit);
 			room.setLamps(solver.getLampPositions());
+			
+			XmlWriter xmlWriter = new XmlWriter(room);
+			xmlWriter.writeXml(inputFile);
+		}
+		
+		if (mode.contains("v")) {
+			
+			System.out.println();
+			System.out.println("Validating '" + inputFile + "'...");
+			
+			Validator validator = new Validator(room);
+			boolean isValid = validator.validate();
+			
+			System.out.println("Room configuration is " + (isValid ? "" : "in") + "valid.");
+			printLamps(room.getLamps());
 		}
 		
 		if (mode.contains("d")) {
 			display(room, mode);
 		}
+	}
+	
+	private static void printLamps(List<Point2D.Float> lamps) {
 		
-		XmlWriter xmlWriter = new XmlWriter(room);
-		xmlWriter.writeXml(inputFile.replace(".xml", "_solved.xml"));
+		int numberOfLamps = lamps.size();
+		if (numberOfLamps == 0) return;
+		
+		String lampsInfo = "Lamps (" + numberOfLamps + "):";
+		
+		for (Point2D.Float lamp : lamps) {
+			lampsInfo += " [" + lamp.x + ", " + lamp.y + "]";
+		}
+		
+		System.out.println(lampsInfo);
 	}
 
 	private static void display(Room room, String mode) {

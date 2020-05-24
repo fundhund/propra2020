@@ -64,6 +64,9 @@ public class Ausleuchtung implements IAusleuchtung {
 		
 		try {
 			
+			System.out.println();
+			System.out.println("Solving '" + xmlFile + "'...");
+			
 			XmlReader xmlReader = new XmlReader(xmlFile);
 			Room room = xmlReader.createRoom();
 			
