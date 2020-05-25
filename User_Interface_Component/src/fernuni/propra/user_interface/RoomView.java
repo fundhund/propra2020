@@ -51,8 +51,8 @@ public class RoomView extends JPanel {
 		this.roomShape = createRoomShape();
 		
 		setBackground(Color.BLACK);
-		int width = (int) Math.ceil((room.getWidth() + 2 * margin) * scale);
-		int height = (int) Math.ceil((room.getHeight() + 2 * margin) * scale);
+		int width = (int) Math.ceil(room.getWidth() * scale+ 2 * margin);
+		int height = (int) Math.ceil(room.getHeight() * scale+ 2 * margin);
     setPreferredSize(new Dimension(width, height));
     
     JLabel numberOfLamps = createNumerOfLamps();
@@ -74,8 +74,8 @@ public class RoomView extends JPanel {
 		List<Point2D.Float> convertedPoints = points
 				.stream()
 				.map(point -> new Point2D.Float(
-						(point.x - offsetX + margin) * scale, 
-						((yMaxRoom - point.y) - offsetY + margin) * scale))
+						(point.x - offsetX) * scale + margin, 
+						((yMaxRoom - point.y) - offsetY) * scale + 2 * margin))
 				.collect(Collectors.toList());
 		
 		return convertedPoints;

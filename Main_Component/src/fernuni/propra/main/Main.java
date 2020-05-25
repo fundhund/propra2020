@@ -46,8 +46,8 @@ public class Main {
 		HashMap<String, Object> params = getParams(args);
 		System.out.println(params);
 		
-//		String inputFile = (String) params.get("inputFile");
-		String inputFile = "instances/validationInstances/Selbsttest_20a.xml";
+		String inputFile = (String) params.get("inputFile");
+//		String inputFile = "instances/validationInstances/Selbsttest_20a.xml";
 		
 		XmlReader xmlReader = new XmlReader(inputFile);
 		Room room = xmlReader.createRoom();
