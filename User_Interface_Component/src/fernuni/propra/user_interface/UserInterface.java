@@ -2,13 +2,9 @@ package fernuni.propra.user_interface;
 
 import java.awt.Color;
 import java.awt.Container;
-import java.awt.Font;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import fernuni.propra.file_processing.Room;
@@ -21,14 +17,10 @@ public class UserInterface extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private String mode;
 	private Room room;
-	private int width;
-	private int height;
 
   public UserInterface(String mode, Room room) {
 		this.mode = mode;
 		this.room = room;
-		this.width = (int) (Math.ceil(room.getWidth()));
-		this.height = (int) (Math.ceil(room.getHeight()));
 		
     initUI();
   }
@@ -36,7 +28,6 @@ public class UserInterface extends JFrame {
   private void initUI() {
   	
 		String title = createTitle();
-		var icon = new ImageIcon("src/light.png");
 		
 		RoomView roomView = new RoomView(this.room, 600);
     add(roomView);
@@ -56,7 +47,6 @@ public class UserInterface extends JFrame {
 
     setTitle(title);
     this.getContentPane().setBackground(Color.RED);
-    setIconImage(icon.getImage());
     pack();
     setLocationRelativeTo(null);
     setDefaultCloseOperation(EXIT_ON_CLOSE);

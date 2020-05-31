@@ -51,8 +51,8 @@ public class RoomView extends JPanel {
 		this.roomShape = createRoomShape();
 		
 		setBackground(Color.BLACK);
-		int width = (int) Math.ceil(room.getWidth() * scale+ 2 * margin);
-		int height = (int) Math.ceil(room.getHeight() * scale+ 2 * margin);
+		int width = (int) Math.ceil(room.getWidth() * scale + 2 * margin);
+		int height = (int) Math.ceil(room.getHeight() * scale + 2 * margin);
     setPreferredSize(new Dimension(width, height));
     
     JLabel numberOfLamps = createNumerOfLamps();

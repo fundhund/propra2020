@@ -2,17 +2,13 @@ package Algorithm_Component;
 
 import static org.junit.Assert.assertEquals;
 
-import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.awt.geom.Point2D.Float;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
 
 import fernuni.propra.algorithm.Lamp;
-import fernuni.propra.file_processing.Direction;
 import fernuni.propra.file_processing.IncorrectShapeException;
 import fernuni.propra.file_processing.Room;
 import fernuni.propra.test.TestHelper;

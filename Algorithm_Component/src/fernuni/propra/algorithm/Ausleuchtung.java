@@ -1,15 +1,6 @@
 package fernuni.propra.algorithm;
 
-import static fernuni.propra.algorithm.RectangleHelper.getIntersection;
-
-import java.awt.geom.Rectangle2D;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.jdom2.JDOMException;
 
 import fernuni.propra.file_processing.Room;
 import fernuni.propra.file_processing.XmlReader;

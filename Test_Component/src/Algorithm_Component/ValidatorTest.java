@@ -1,27 +1,14 @@
 package Algorithm_Component;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
-import java.awt.geom.Rectangle2D.Float;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.junit.Test;
 
-import fernuni.propra.algorithm.Ausleuchtung;
-import fernuni.propra.algorithm.IAusleuchtung;
-import fernuni.propra.algorithm.Lamp;
-import fernuni.propra.algorithm.Solver;
-import fernuni.propra.algorithm.TimeLimitExceededException;
 import fernuni.propra.algorithm.Validator;
 import fernuni.propra.file_processing.IncorrectShapeException;
 import fernuni.propra.file_processing.Room;

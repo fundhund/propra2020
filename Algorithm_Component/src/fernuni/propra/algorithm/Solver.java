@@ -4,7 +4,6 @@ import static fernuni.propra.algorithm.RectangleHelper.getIntersection;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.awt.geom.Rectangle2D.Float;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -73,8 +72,6 @@ public class Solver {
 		}
 				
 		List<Rectangle2D.Float> obsoleteIntersections = new ArrayList<>();
-		
-		int iteration = 1;
 		
 		do {
 //			System.out.println();
@@ -165,7 +162,6 @@ public class Solver {
 //		    System.out.println(entry.getKey() + " " + entry.getValue());  
 //			});
 			
-			iteration++;
 		} while (foundNewIntersections);
 		
 		return intersectionsMap;
