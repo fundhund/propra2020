@@ -43,30 +43,27 @@ public class Main {
 	 */
 	public static void main(String[] args) throws JDOMException, IOException, IncorrectShapeException, TimeLimitExceededException {
 			
-		HashMap<String, Object> params = getParams(args);
-		System.out.println(params);
+		HashMap<String, String> params = getParams(args);
 		
 		String inputFile = (String) params.get("inputFile");
-//		String inputFile = "instances/validationInstances/Selbsttest_20a.xml";
+		if (inputFile == null) {
+			System.out.println("No input file given. Use if=<FILE_PATH> to pass an input file.");
+			return;
+		}
+		
+		String mode = params.get("mode");
+		if (mode == null) {
+			System.out.println("No run mode given. Use r=s|sd|v|vd|d to pass a run mode (s=solve, v=calidate, d=display).");
+			return;
+		}
 		
 		XmlReader xmlReader = new XmlReader(inputFile);
 		Room room = xmlReader.createRoom();
 		
-		System.out.println(room.getId());
-		System.out.println(room.getCorners());
-		System.out.println(room.getLamps());
-		System.out.println(room.getShape());
-		
-		String mode = Arrays.stream(args)
-				.filter(arg -> arg.startsWith("r="))
-				.findFirst()
-				.get()
-				.split("=")[1];
-		
 		if (mode.contains("s")) {
 			
 			int timeLimit = params.containsKey("timeLimit") && params.get("timeLimit") != null 
-					? (int) params.get("timeLimit") 
+					? Integer.parseInt(params.get("timeLimit")) 
 					: 0;
 			
 			Solver solver = new Solver(room);
@@ -115,24 +112,18 @@ public class Main {
 		});
 	}
 		
-	public static HashMap<String, Object> getParams(String[] args) {
+	public static HashMap<String, String> getParams(String[] args) {
 		
 		// Parameters
-		HashMap<String, Boolean> mode = null;
+		String mode = null;
 		String inputFile = null;
-		Integer timeLimit = null;
+		String timeLimit = null;
 		
 		// Process command line arguments
 		for (String arg : args) {
 			
 			if (mode == null && arg.matches("r=(s|sd|v|vd|d)")) {
-				String modeValue = arg.split("=")[1];
-				
-				mode = new HashMap<String, Boolean>();
-				mode.put("solve", modeValue.contains("s"));
-				mode.put("display", modeValue.contains("d"));
-				mode.put("validate", modeValue.contains("v"));
-						
+				mode = arg.split("=")[1];
 				continue;
 			}
 				
@@ -142,12 +133,12 @@ public class Main {
 			}
 			
 			if (timeLimit == null && arg.matches("l=[1-9][0-9]*")) {
-				timeLimit = Integer.parseInt(arg.split("=")[1]);
+				timeLimit = arg.split("=")[1];
 				continue;
 			}
 		}
 		
-		HashMap<String, Object> params = new HashMap<String, Object>();
+		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("mode", mode);
 		params.put("inputFile", inputFile);
 		params.put("timeLimit", timeLimit);
