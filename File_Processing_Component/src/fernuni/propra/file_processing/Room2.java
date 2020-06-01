@@ -13,7 +13,7 @@ import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
-public class Room {
+public class Room2 {
 	
 	private String id;
 	private List<Point2D.Float> corners;
@@ -27,7 +27,7 @@ public class Room {
 	private float width;
 	private float height;
 
-	public Room(String id, List<Point2D.Float> corners, List<Point2D.Float> lamps) throws IncorrectShapeException {
+	public Room2(String id, List<Point2D.Float> corners, List<Point2D.Float> lamps) throws IncorrectShapeException {
 		
 		if (corners.size() < 4) throw new IncorrectShapeException("Not enough points given for creating a room.");
 		if (!isRectilinear(corners)) throw new IncorrectShapeException("Given points do not shape a rectilinear polygon.");
@@ -80,7 +80,7 @@ public class Room {
 		return height;
 	}
 
-	public Room(String id, List<Point2D.Float> corners) throws IncorrectShapeException {
+	public Room2(String id, List<Point2D.Float> corners) throws IncorrectShapeException {
 		this(id, corners, new ArrayList<Point2D.Float>());
 	}
 	
@@ -160,50 +160,15 @@ public class Room {
 	private HashMap<Direction, List<Line2D.Float>> createWallsByDirection() {
 		HashMap<Direction, List<Line2D.Float>> wallsByDirection = new HashMap<>();
 		
-		Function<Line2D.Float, Direction> getInitialDirection = getGetInitialDirection();
-		
 		for (Direction direction : Direction.values()) {
 			wallsByDirection.put(direction, new ArrayList<>());
 		}
 		
 		for (Line2D.Float wall : walls) {
-			wallsByDirection.get(getInitialDirection.apply(wall)).add(wall);
+			wallsByDirection.get(getDirection(wall)).add(wall);
 		}
 		
 		return wallsByDirection;
-	}
-	
-	private Function<Line2D.Float, Direction> getGetInitialDirection() {
-		Line2D.Float southernmostWall = this.getWalls()
-				.stream()
-				.filter(w -> w.y1 == w.y2)
-				.sorted((w1, w2) -> w1.y1 > w2.y1 ? 1 : -1)
-				.collect(Collectors.toList())
-				.get(0);
-		
-		Function<Line2D.Float, Boolean> isSouthWall = w -> 
-			southernmostWall.x1 < southernmostWall.x2 ? w.x1 < w.x2 : w.x1 > w.x2;
-		
-		Line2D.Float westernmostWall = this.getWalls()
-				.stream()
-				.filter(w -> w.x1 == w.x2)
-				.sorted((w1, w2) -> w1.x1 > w2.x1 ? 1 : -1)
-				.collect(Collectors.toList())
-				.get(0);
-		
-		Function<Line2D.Float, Boolean> isWestWall = w -> 
-			westernmostWall.y1 < westernmostWall.y2 ? w.y1 < w.y2 : w.y1 > w.y2;
-		
-		Function<Line2D.Float, Direction> getInitialDirection = wall ->
-			this.isHorizontalWall(wall)
-			? isSouthWall.apply(wall)
-					? Direction.SOUTH
-					: Direction.NORTH
-			:	isWestWall.apply(wall)
-					? Direction.WEST
-					: Direction.EAST;
-			
-		return getInitialDirection;
 	}
 	
 	private boolean isRectilinear(List<Point2D.Float> corners) {
