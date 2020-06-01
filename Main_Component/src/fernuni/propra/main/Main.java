@@ -3,7 +3,6 @@ package fernuni.propra.main;
 import java.awt.EventQueue;
 import java.awt.geom.Point2D;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -76,7 +75,6 @@ public class Main {
 		
 		if (mode.contains("v")) {
 			
-			System.out.println();
 			System.out.println("Validating '" + inputFile + "'...");
 			
 			Validator validator = new Validator(room);
@@ -112,7 +110,7 @@ public class Main {
 		});
 	}
 		
-	public static HashMap<String, String> getParams(String[] args) {
+	private static HashMap<String, String> getParams(String[] args) {
 		
 		// Parameters
 		String mode = null;

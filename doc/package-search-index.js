@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"Algorithm_Component"},{"l":"All Packages","url":"allpackages-index.html"},{"l":"fernuni.propra.algorithm"},{"l":"fernuni.propra.file_processing"},{"l":"fernuni.propra.main"},{"l":"fernuni.propra.test"},{"l":"fernuni.propra.user_interface"},{"l":"File_Processing_Component"}]
