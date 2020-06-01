@@ -273,30 +273,23 @@ public class Room {
 	
 	public Direction getDirection(Line2D.Float wall) {
 		
-		if (getOrientation(wall).equals(Orientation.HORIZONTAL)) {
-			float x = ((wall.x1 + wall.x2) / 2);
-			
-			float yNorthOfWall = wall.y1 + 0.005f;
-			if (contains(new Point2D.Float(x, yNorthOfWall))) return Direction.SOUTH;
-			
-			float ySouthOfWall = wall.y1 - 0.005f;
-			if (contains(new Point2D.Float(x, ySouthOfWall))) return Direction.NORTH;
-			
-			return null;
+		if (!this.walls.contains(wall)) {
+			return getDirection(
+				this.walls
+					.stream()
+					.filter(c -> 
+						wall.contains(c.getP1()) 
+							&& wall.contains(c.getP2()))
+					.findFirst()
+					.get()
+				);
 		}
 		
-		if (getOrientation(wall).equals(Orientation.VERTICAL)) {
-			float y = ((wall.y1 + wall.y2) / 2);
-			
-			float xEastOfWall = wall.x1 + 0.005f;
-			if (contains(new Point2D.Float(xEastOfWall, y))) return Direction.WEST;
-			
-			float xWestOfWall = wall.x1 - 0.005f;
-			if (contains(new Point2D.Float(xWestOfWall, y))) return Direction.EAST;
-			
-			return null;
-		}
-		
+		if (this.wallsByDirection.get(Direction.NORTH).contains(wall)) return Direction.NORTH;
+		if (this.wallsByDirection.get(Direction.EAST).contains(wall)) return Direction.EAST;
+		if (this.wallsByDirection.get(Direction.SOUTH).contains(wall)) return Direction.SOUTH;
+		if (this.wallsByDirection.get(Direction.WEST).contains(wall)) return Direction.WEST;
+				
 		return null;
 	}
 
