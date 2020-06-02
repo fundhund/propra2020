@@ -34,8 +34,7 @@ public class Solver {
 	public Solver(Room room) {
 		this.room = room;
 		this.rectangleIndices = IntStream.range(0, room.getRectangles().length).toArray();
-		this.lamps = getCandidateLamps();
-		this.numberOfLamps = lamps.size();
+		this.numberOfLamps = 0;
 	}
 
 	public List<Lamp> getLamps() {
@@ -58,7 +57,7 @@ public class Solver {
 	}
 
 	public Map<Rectangle2D.Float, Set<Integer>> createCandidateRectangles() {
-			
+		
 		Rectangle2D.Float[] rectangles = room.getRectangles();
 		List<Rectangle2D.Float> intersections = new ArrayList<>();
 		
@@ -74,10 +73,6 @@ public class Solver {
 		List<Rectangle2D.Float> obsoleteIntersections = new ArrayList<>();
 		
 		do {
-//			System.out.println();
-//			System.out.println("===========================");
-//			System.out.println("Iteration " + iteration);
-			
 			foundNewIntersections = false;
 			obsoleteIntersections = new ArrayList<>();
 			
@@ -111,56 +106,13 @@ public class Solver {
 						if (intersectionsMap.containsKey(intersection)) involvedRectangles.addAll(intersectionsMap.get(intersection));
 							
 						intersectionsMap.put(intersection, involvedRectangles);
-						
-//						if (intersectionsMap.get(current).contains(4)) {
-//							System.out.println("HERE'S 4:");
-//							System.out.println(current.toString() + " -> " + intersectionsMap.get(current));
-//							System.out.println("+ " + candidate.toString() + " -> " + intersectionsMap.get(candidate));
-//							System.out.println("= " + intersection.toString() + " -> " + intersectionsMap.get(intersection));
-//							System.out.println("OBSOLETE CONTAINS INTERSECTION: " + obsoleteIntersections.contains(intersection));
-//							System.out.println();
-//							
-//							System.out.println();
-//							System.out.println("INNER LOOP:");
-//							intersectionsMap.entrySet().forEach(entry->{
-//						    System.out.println(entry.getKey() + " " + entry.getValue());  
-//							});
-//							
-//						}
 					}
-					
-//					if (intersectionsMap.get(current).contains(4)) {
-//						System.out.println();
-//						System.out.println("OUTER LOOP:");
-//						intersectionsMap.entrySet().forEach(entry->{
-//					    System.out.println(entry.getKey() + " " + entry.getValue());  
-//						});
-//						
-//					}
 				}
 			}
-			
-//			System.out.println();
-//			System.out.println("BEFORE DELETE OBSOLETE");
-//			intersectionsMap.entrySet().forEach(entry->{
-//		    System.out.println(entry.getKey() + " " + entry.getValue());  
-//			});
-//			
-//			System.out.println();
-//			System.out.println("OBSOLETE LIST");
-//			obsoleteIntersections.stream().forEach(r->{
-//		    System.out.println(r.toString() + " -> " + intersectionsMap.get(r));  
-//			});
-			
+
 			obsoleteIntersections
 			.stream()
 			.forEach(intersection -> intersectionsMap.remove(intersection));
-			
-//			System.out.println();
-//			System.out.println("AFTER DELETE OBSOLETE");
-//			intersectionsMap.entrySet().forEach(entry->{
-//		    System.out.println(entry.getKey() + " " + entry.getValue());  
-//			});
 			
 		} while (foundNewIntersections);
 		
@@ -222,6 +174,12 @@ public class Solver {
 		
 		long startTime = System.currentTimeMillis();
 		
+		System.out.println("Calculating candidate lamp positions...");
+		long rectanglesStartTime = System.currentTimeMillis();
+		setLamps(getCandidateLamps());
+		System.out.println("Calculated candidate lamp positions in " + ((System.currentTimeMillis() - rectanglesStartTime)/1000f) + " seconds.");
+		
+		
 		List<Lamp> switchedOffLamps = new ArrayList<>(this.lamps);
 		switchedOffLamps.stream().forEach(lamp -> lamp.switchOff());
 		
@@ -233,7 +191,10 @@ public class Solver {
 			this.endTime = startTime + timeLimit * 1000;
 		}
 		
+		System.out.println("Reducing lamps...");
+		long reduceStartTime = System.currentTimeMillis();
 		reduceLamps(switchedOffLamps, 0, rectangleIlluminationMap);
+		System.out.println("Reduced lamps in " + ((System.currentTimeMillis() - reduceStartTime)/1000f) + " seconds.");
 		
 		System.out.println("Solved with " + numberOfLamps + " lamp(s) in " + ((System.currentTimeMillis() - startTime)/1000f) + " seconds.");
 		
