@@ -2,8 +2,13 @@ package fernuni.propra.algorithm;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.awt.geom.Rectangle2D.Float;
 
+/**
+ * Helper methods for rectangles.
+ * 
+ * @author Marius Mielke (4531230)
+ *
+ */
 public class RectangleHelper {
 	
 	/**

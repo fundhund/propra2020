@@ -6,6 +6,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Lamp.
+ * 
+ * @author Marius Mielke (4531230)
+ *
+ */
 public class Lamp {
 
 	private Point2D.Float position;
@@ -18,6 +24,9 @@ public class Lamp {
 		this.rectangles = rectangles;
 	}
 	
+	/**
+	 * Constructor for a turned off lamp with position (0, 0).
+	 */
 	public Lamp() {
 		this(new Point2D.Float(0, 0), false, null);
 	}

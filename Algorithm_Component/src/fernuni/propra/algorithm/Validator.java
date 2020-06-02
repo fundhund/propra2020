@@ -6,6 +6,12 @@ import java.util.List;
 
 import fernuni.propra.file_processing.Room;
 
+/**
+ * Validates lamp positions for a given room.
+ * 
+ * @author Marius Mielke (4531230)
+ *
+ */
 public class Validator {
 	
 	private Room room;
@@ -14,6 +20,11 @@ public class Validator {
 		this.room = room;
 	}
 	
+	/**
+	 * Validates lamps positions.
+	 * 
+	 * @return a boolean value
+	 */
 	public boolean validate() {
 
 		List<Point2D.Float> lamps = room.getLamps();

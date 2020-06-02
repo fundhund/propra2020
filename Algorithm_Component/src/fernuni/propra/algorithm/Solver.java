@@ -18,6 +18,12 @@ import java.util.stream.IntStream;
 
 import fernuni.propra.file_processing.Room;
 
+/**
+ * Calculates efficient lamp positions for a given room.
+ * 
+ * @author Marius Mielke (4531230)
+ *
+ */
 public class Solver {
 	
 	private Room room;
@@ -41,6 +47,11 @@ public class Solver {
 		return lamps;
 	}
 	
+	/**
+	 * Returns positions of lamps.
+	 * 
+	 * @return a list of positions
+	 */
 	public List<Point2D.Float> getLampPositions() {
 		List<Point2D.Float> lampPositions = new ArrayList<>();
 		
@@ -51,11 +62,21 @@ public class Solver {
 		return lampPositions;
 	}
 
+	/**
+	 * Sets lamps and number of lamps.
+	 * 
+	 * @param lamps a list of lamps
+	 */
 	public void setLamps(List<Lamp> lamps) {
 		this.lamps = new ArrayList<>(lamps);
 		this.numberOfLamps = lamps.size();
 	}
 
+	/**
+	 * Calculates intersections that contain parts of all room wall's rectangles.
+	 * 
+	 * @return a map of rectangles and lists of room wall rectangle indices
+	 */
 	public Map<Rectangle2D.Float, Set<Integer>> createCandidateRectangles() {
 		
 		Rectangle2D.Float[] rectangles = room.getRectangles();
@@ -119,6 +140,12 @@ public class Solver {
 		return intersectionsMap;
 	}
 	
+	/**
+	 * Sorts an array.
+	 * 
+	 * @param rectangleSet a set of rectangles.
+	 * @return a sorted array
+	 */
 	public static int[] toSortedArray(Set<Integer> rectangleSet) {
 		
 		int[] rectangleArray = new int[rectangleSet.size()];
@@ -133,6 +160,11 @@ public class Solver {
 		return rectangleArray;
 	}
 	
+	/**
+	 * Creates a list of lamps for calculated candidate rectangles.
+	 * 
+	 * @return a list of lamps
+	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public List<Lamp> getCandidateLamps() {
 		
@@ -153,6 +185,13 @@ public class Solver {
 		return candidateLamps;
 	}
 	
+	/**
+	 * Creates a lamp from a rectangle and a set of illuminated rectangles.
+	 * 
+	 * @param candidateRectangle calculates rectangle
+	 * @param involvedRectangles set room wall rectangles intersecting with candidate rectangle as indices
+	 * @return a lamp
+	 */
 	public Lamp getCandidateLamp(Rectangle2D.Float candidateRectangle, Set<Integer> involvedRectangles) {
 		
 		float x = candidateRectangle.x + candidateRectangle.width/2;
@@ -166,10 +205,23 @@ public class Solver {
 		return candidateLamp;
 	}
 	
+	/**
+	 * Solves a room without any time limit.
+	 * 
+	 * @return number of lamps
+	 * @throws TimeLimitExceededException time limit exception
+	 */
 	public int solve() throws TimeLimitExceededException {
 		return solve(0);
 	}
 	
+	/**
+	 * Solves a room with a given time limit.
+	 * 
+	 * @param timeLimit time limit in seconds
+	 * @return number of lamps
+	 * @throws TimeLimitExceededException time limit exception
+	 */
 	public int solve(int timeLimit) throws TimeLimitExceededException {
 		
 		long startTime = System.currentTimeMillis();
@@ -211,6 +263,14 @@ public class Solver {
 		return numberOfLamps;
 	}
 	
+	/**
+	 * Reduces the number of candidate lamps to the necessary amount.
+	 * 
+	 * @param candidateLamps a list of lamps
+	 * @param index lamp index
+	 * @param rectangleIlluminationMap a map showing how many lamps are illuminating one rectangle (by index)
+	 * @throws TimeLimitExceededException time limit exception
+	 */
 	public void reduceLamps(List<Lamp> candidateLamps, int index, Map<Integer, Integer> rectangleIlluminationMap) throws TimeLimitExceededException {
 		
 		if (endTime > 0 && System.currentTimeMillis() > endTime) {
@@ -252,14 +312,31 @@ public class Solver {
 		}
 	}
 	
+	/**
+	 * Checks whether a room is completely illuminated.
+	 * 
+	 * @param rectangleIlluminationMap a map showing how many lamps are illuminating one rectangle (by index)
+	 * @return a boolean value
+	 */
 	public boolean isRoomIlluminated(Map<Integer, Integer> rectangleIlluminationMap) {
 		return Arrays.stream(rectangleIndices).allMatch(index -> rectangleIlluminationMap.get(index) > 0);
 	}
 	
+	/**
+	 * Returns the number of switched on lamps in a given list of lamps.
+	 * 
+	 * @param lamps a list of lamps
+	 * @return the number of switched on lamps
+	 */
 	public int getNumberOfSwitchedOnLamps(List<Lamp> lamps) {
 		return (int) lamps.stream().filter(lamp -> lamp.isOn()).count();
 	}
 	
+	/**
+	 * Prints a list of lamps in human-readable form.
+	 * 
+	 * @param lamps a list of lamps
+	 */
 	public void printLamps(List<Lamp> lamps) {
 		lamps.stream().forEach(System.out::println);
 	}
