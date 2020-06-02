@@ -39,7 +39,7 @@ public class Room {
 	 * @param id room ID
 	 * @param corners list of points defining the room shape
 	 * @param lamps list of lamp positions
-	 * @throws IncorrectShapeException 
+	 * @throws IncorrectShapeException exception for an invalid room definition
 	 */
 	public Room(String id, List<Point2D.Float> corners, List<Point2D.Float> lamps) throws IncorrectShapeException {
 		
@@ -98,7 +98,7 @@ public class Room {
 	 * 
 	 * @param id room ID
 	 * @param corners list of points defining the room shape
-	 * @throws IncorrectShapeException 
+	 * @throws IncorrectShapeException exception for an invalid room definition
 	 */
 	public Room(String id, List<Point2D.Float> corners) throws IncorrectShapeException {
 		this(id, corners, new ArrayList<Point2D.Float>());

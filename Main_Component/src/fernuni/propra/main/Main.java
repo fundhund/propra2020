@@ -17,28 +17,30 @@ import fernuni.propra.user_interface.UserInterface;
 /**
  * Haupteinstiegspunkt der Anwendung.
  *
- * In der Main-Komponente m&uumlssen unter anderem die Eingabeparameter verarbeitet werden.</br>
+ * In der Main-Komponente m&uuml;ssen unter anderem die Eingabeparameter verarbeitet werden.
  * 
- * f&uumlr den Ablaufparameter "r" wird folgende Festlegung getroffen:
+ * f&uuml;r den Ablaufparameter "r" wird folgende Festlegung getroffen:
  * <ul>
- * <li>"s" (solve): f&uumlr die durch die XML-Datei beschriebene Probleminstanz wird eine L&oumlsung ermittelt. Die Positionen der Lampen werden in der angegebenen XML-Datei gespeichert. Wenn in der XML-Datei bereits eine L&oumlsung enthalten ist, so ist diese zu &uumlberschreiben.</li>
- * <li>"sd" (solve & display): wie "s", nur dass der Raum sowie die ermittelten Positionen der Lampen zus&aumltzlich in der grafischen Oberfl&aumlche gezeigt werden.</li>
- * <li>"v" (validate): durch diese Option wird gepr&uumlft, ob der in der angegebenen XML-Datei enthaltene Raum durch die ebenso dort angegebenen Lampen vollst&aumlndig ausgeleuchtet ist. Das Ergebnis der Pr&uumlfung sowie die Anzahl und Positionen der Lampen werden ausgegeben. Falls die angegebene XML-Datei keinen zul&aumlssigen Raum enth&aumllt, wird eine Fehlermeldung ausgegeben. Die Ausgabe erfolgt in der Kommandozeile.</li>
- * <li>"vd" (validate & display): wie "v", nur dass der Raum und die Lampen nach der Validierung zus&aumltzlich in der grafischen Oberfl&aumlche angezeigt werden.</li>
- * <li>"d" (display): der in der XML-Datei enthaltene Raum und die Lampen werden in der grafischen Oberfl&aumlche angezeigt. Falls die angegebene XML-Datei keinen zul&aumlssigen Raum enth&aumllt, wird eine Fehlermeldung auf der Kommandozeile ausgegeben.</li>
+ * <li>"s" (solve): f&uuml;r die durch die XML-Datei beschriebene Probleminstanz wird eine L&ouml;sung ermittelt. Die Positionen der Lampen werden in der angegebenen XML-Datei gespeichert. Wenn in der XML-Datei bereits eine L&ouml;sung enthalten ist, so ist diese zu &uuml;berschreiben.</li>
+ * <li>"sd" (solve &amp; display): wie "s", nur dass der Raum sowie die ermittelten Positionen der Lampen zus&auml;tzlich in der grafischen Oberfl&auml;che gezeigt werden.</li>
+ * <li>"v" (validate): durch diese Option wird gepr&uuml;ft, ob der in der angegebenen XML-Datei enthaltene Raum durch die ebenso dort angegebenen Lampen vollst&auml;ndig ausgeleuchtet ist. Das Ergebnis der Pr&uuml;fung sowie die Anzahl und Positionen der Lampen werden ausgegeben. Falls die angegebene XML-Datei keinen zul&auml;ssigen Raum enth&auml;lt, wird eine Fehlermeldung ausgegeben. Die Ausgabe erfolgt in der Kommandozeile.</li>
+ * <li>"vd" (validate &amp; display): wie "v", nur dass der Raum und die Lampen nach der Validierung zus&auml;tzlich in der grafischen Oberfl&auml;che angezeigt werden.</li>
+ * <li>"d" (display): der in der XML-Datei enthaltene Raum und die Lampen werden in der grafischen Oberfl&auml;che angezeigt. Falls die angegebene XML-Datei keinen zul&auml;ssigen Raum enth&auml;lt, wird eine Fehlermeldung auf der Kommandozeile ausgegeben.</li>
  * </ul>
- * Der Eingabedateiparameter "if" ist ein String, der den Pfad der Eingabedatei beinhaltet.</br>
+ * Der Eingabedateiparameter "if" ist ein String, der den Pfad der Eingabedatei beinhaltet.
  * 
- * Der Parameter f&uumlr ein Zeitlimit "l" ist eine positive nat&uumlrliche Zahl, welche die maximale Rechenzeit in Sekunden angibt.
+ * Der Parameter f&uuml;r ein Zeitlimit "l" ist eine positive nat&uuml;rliche Zahl, welche die maximale Rechenzeit in Sekunden angibt.
  */
 public class Main {
 
 	/**
 	 * Haupteinstiegsfunktion
-	 * @throws IOException 
-	 * @throws JDOMException 
-	 * @throws IncorrectShapeException 
-	 * @throws TimeLimitExceededException 
+	 * 
+	 * @param args command line arguments
+	 * @throws IOException IO exception
+	 * @throws JDOMException JDOM exception
+	 * @throws IncorrectShapeException exception for an invalid room definition
+	 * @throws TimeLimitExceededException exception for a exceeding a given time limit
 	 */
 	public static void main(String[] args) throws JDOMException, IOException, IncorrectShapeException, TimeLimitExceededException {
 			

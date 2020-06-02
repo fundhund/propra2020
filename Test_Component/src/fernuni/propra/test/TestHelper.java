@@ -6,13 +6,33 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Collection of methods for unit tests.
+ * 
+ * @author Marius Mielke (4531230)
+ *
+ */
 public class TestHelper {
 	
+	/**
+	 * Checks whether two walls are equal.
+	 * 
+	 * @param w1 first wall
+	 * @param w2 second wall
+	 * @return a boolean value
+	 */
 	public static boolean areEqual(Line2D.Float w1, Line2D.Float w2) {
 		return w1.x1 == w2.x1 && w1.y1 == w2.y1 && w1.x2 == w2.x2 && w1.y2 == w2.y2
 				|| w1.x1 == w2.x2 && w1.y1 == w2.y2 && w1.x2 == w2.x1 && w1.y2 == w2.y1;
 	}
 	
+	/**
+	 * Checks whether two rectangles are equal.
+	 * 
+	 * @param r1 first rectangle
+	 * @param r2 second rectangle
+	 * @return a boolean value
+	 */
 	public static boolean areEqual(Rectangle2D.Float r1, Rectangle2D.Float r2) {
 		return r1.x == r2.x && r1.y == r2.y && r1.width == r2.width && r1.height == r2.height;
 	}
@@ -21,6 +41,12 @@ public class TestHelper {
 	 *  ___
 	 * |   |
 	 * |___|
+	 */
+	/**
+	 * Creates points for a square shape.
+	 * 
+	 * @param sideLength length of one unit
+	 * @return a list of points
 	 */
 	public static List<Point2D.Float> getCornersForSquare(float sideLength) {
 		List<Point2D.Float> corners = new ArrayList<>();
@@ -31,6 +57,11 @@ public class TestHelper {
 		return corners;
 	}
 	
+	/**
+	 * Creates points for a square shape.
+	 * 
+	 * @return a list of points
+	 */
 	public static List<Point2D.Float> getCornersForSquare()  {
 		return getCornersForSquare(2);
 	}
@@ -40,6 +71,12 @@ public class TestHelper {
 	 * | |
 	 * | |_
 	 * |___|
+	 */
+	/**
+	 * Creates points for an L shape.
+	 * 
+	 * @param sideLength length of one unit
+	 * @return a list of points
 	 */
 	public static List<Point2D.Float> getCornersForLShape(float sideLength) {
 		List<Point2D.Float> corners = new ArrayList<>();
@@ -52,6 +89,11 @@ public class TestHelper {
 		return corners;
 	}
 	
+	/**
+	 * Creates points for an L shape.
+	 * 
+	 * @return a list of points
+	 */
 	public static List<Point2D.Float> getCornersForLShape()  {
 		return getCornersForLShape(2);
 	}
@@ -61,6 +103,12 @@ public class TestHelper {
 	 * |  _  |
 	 * | | | |
 	 * |_| |_|
+	 */
+	/**
+	 * Creates points for an arc shape.
+	 * 
+	 * @param unit length of one unit
+	 * @return a list of points
 	 */
 	public static List<Point2D.Float> getCornersForArcShape(float unit) {
 		List<Point2D.Float> corners = new ArrayList<>();
@@ -75,6 +123,11 @@ public class TestHelper {
 		return corners;
 	}
 	
+	/**
+	 * Creates points for an arc shape.
+	 * 
+	 * @return a list of points
+	 */
 	public static List<Point2D.Float> getCornersForArcShape()  {
 		return getCornersForArcShape(1);
 	}
@@ -84,6 +137,12 @@ public class TestHelper {
 	 * |_  |
 	 *   | |_
 	 *   |___|
+	 */
+	/**
+	 * Creates points for a Z shape.
+	 * 
+	 * @param unit length of one unit
+	 * @return a list of points
 	 */
 	public static List<Point2D.Float> getCornersForZShape(float unit) {
 		List<Point2D.Float> corners = new ArrayList<>();
@@ -98,6 +157,11 @@ public class TestHelper {
 		return corners;
 	}
 	
+	/**
+	 * Creates points for a Z shape.
+	 * 
+	 * @return a list of points
+	 */
 	public static List<Point2D.Float> getCornersForZShape()  {
 		return getCornersForZShape(1);
 	}
@@ -107,6 +171,12 @@ public class TestHelper {
 	 *  _| |_
 	 * |_   _|
 	 *   |_|
+	 */
+	/**
+	 * Creates points for a plus shape.
+	 * 
+	 * @param unit length of one unit
+	 * @return a list of points
 	 */
 	public static List<Point2D.Float> getCornersForPlusShape(float unit) {
 		List<Point2D.Float> corners = new ArrayList<>();
@@ -125,6 +195,11 @@ public class TestHelper {
 		return corners;
 	}
 	
+	/**
+	 * Creates points for a plus shape.
+	 * 
+	 * @return a list of points
+	 */
 	public static List<Point2D.Float> getCornersForPlusShape()  {
 		return getCornersForPlusShape(1);
 	}
@@ -137,6 +212,12 @@ public class TestHelper {
 	 * |  |_  _|  |
 	 * |    ||    |
 	 * |____||____|
+	 */
+	/**
+	 * Creates points for an open ring shape.
+	 * 
+	 * @param unit length of one unit
+	 * @return a list of points
 	 */
 	public static List<Point2D.Float> getCornersForOpenRingShape(float unit) {
 		List<Point2D.Float> corners = new ArrayList<>();
@@ -155,10 +236,22 @@ public class TestHelper {
 		return corners;
 	}
 	
+	/**
+	 * Creates points for an open ring shape.
+	 * 
+	 * @return a list of points
+	 */
 	public static List<Point2D.Float> getCornersForOpenRingShape()  {
 		return getCornersForOpenRingShape(1);
 	}
 	
+	/**
+	 * Checks whether two list contain the same lines.
+	 * 
+	 * @param lines1 first list of lines
+	 * @param lines2 second list of lines
+	 * @return a boolean value
+	 */
 	public static boolean containEqualLines(List<Line2D.Float> lines1, List<Line2D.Float> lines2) {
 		if (lines1.size() != lines2.size()) return false;
 		
