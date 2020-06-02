@@ -18,6 +18,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import fernuni.propra.file_processing.Room;
 
+/**
+ * Displays a given room and the number of lamps.
+ * 
+ * @author Marius Mielke (4531230)
+ *
+ */
 public class RoomView extends JPanel {
 	
 	private static final long serialVersionUID = 1L;
@@ -70,6 +76,12 @@ public class RoomView extends JPanel {
 		return createConvertedPoints(lamps);
 	}
 	
+	/**
+	 * Converts room points to scale.
+	 * 
+	 * @param points a list of points
+	 * @return a list of converted points
+	 */
 	private List<Point2D.Float> createConvertedPoints(List<Point2D.Float> points) {
 		List<Point2D.Float> convertedPoints = points
 				.stream()
@@ -81,6 +93,11 @@ public class RoomView extends JPanel {
 		return convertedPoints;
 	}
 	
+	/**
+	 * Draws the room.
+	 * 
+	 * @param g graphics object
+	 */
 	private void drawRoom(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
     g2.setPaint(Color.WHITE);
@@ -88,6 +105,11 @@ public class RoomView extends JPanel {
 		g2.draw(roomShape);
 	}
 	
+	/**
+	 * Creates a room shape.
+	 * 
+	 * @return a room shape
+	 */
 	private Path2D.Float createRoomShape() {
 		Path2D.Float path = new Path2D.Float();
 		path.moveTo(convertedCorners.get(0).x, convertedCorners.get(0).y);
@@ -97,6 +119,11 @@ public class RoomView extends JPanel {
 		return path;
 	}
 	
+	/**
+	 * Creates lamp shapes.
+	 * 
+	 * @return a list of lamp shapes
+	 */
 	private List<Shape> createLampShapes() {
 		return convertedLamps
 			.stream()
@@ -111,6 +138,11 @@ public class RoomView extends JPanel {
 			.collect(Collectors.toList());
 	}
 	
+	/**
+	 * Draws the lamps.
+	 * 
+	 * @param g graphics object
+	 */
 	private void drawLamps(Graphics g) {
 		Graphics2D g2 = (Graphics2D)g;
 		g2.setPaint(Color.RED);
@@ -123,6 +155,11 @@ public class RoomView extends JPanel {
 			});
 	}
 	
+	/**
+	 * Creates a label for the number of lamps.
+	 * 
+	 * @return a label
+	 */
 	private JLabel createNumerOfLamps() {
   	String labelText = "#Lamps: " + convertedLamps.size();
   	JLabel label = new JLabel(labelText, JLabel.CENTER);

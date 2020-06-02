@@ -9,11 +9,14 @@ import javax.swing.JPanel;
 
 import fernuni.propra.file_processing.Room;
 
+/**
+ * GUI for rooms.
+ * 
+ * @author Marius Mielke (4531230)
+ *
+ */
 public class UserInterface extends JFrame {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private String mode;
 	private Room room;
@@ -25,6 +28,9 @@ public class UserInterface extends JFrame {
     initUI();
   }
 
+  /**
+   * Initializes GUI. 
+   */
   private void initUI() {
   	
 		String title = createTitle();
@@ -52,6 +58,11 @@ public class UserInterface extends JFrame {
     setDefaultCloseOperation(EXIT_ON_CLOSE);
   }
   
+  /**
+   * Creates window title based on given mode. 
+   * 
+   * @return title
+   */
   private String createTitle() {
   	String titleStart = "Art Gallery Problem";
     	
