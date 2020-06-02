@@ -8,9 +8,8 @@ import java.util.List;
 
 import org.jdom2.JDOMException;
 
-import fernuni.propra.algorithm.Solver;
+import fernuni.propra.algorithm.Ausleuchtung;
 import fernuni.propra.algorithm.TimeLimitExceededException;
-import fernuni.propra.algorithm.Validator;
 import fernuni.propra.file_processing.*;
 import fernuni.propra.user_interface.UserInterface;
 
@@ -69,9 +68,9 @@ public class Main {
 					? Integer.parseInt(params.get("timeLimit")) 
 					: 0;
 			
-			Solver solver = new Solver(room);
-			solver.solve(timeLimit);
-			room.setLamps(solver.getLampPositions());
+			Ausleuchtung ausleuchtung = new Ausleuchtung();
+			ausleuchtung.solve(inputFile, timeLimit);
+			room.setLamps(ausleuchtung.getLamps());
 			
 			XmlWriter xmlWriter = new XmlWriter(room);
 			xmlWriter.writeXml(inputFile);
@@ -81,8 +80,8 @@ public class Main {
 			
 			System.out.println("Validating '" + inputFile + "'...");
 			
-			Validator validator = new Validator(room);
-			boolean isValid = validator.validate();
+			Ausleuchtung ausleuchtung = new Ausleuchtung();
+			boolean isValid = ausleuchtung.validateSolution(inputFile);
 			
 			System.out.println("Room configuration is " + (isValid ? "" : "in") + "valid.");
 			printLamps(room.getLamps());

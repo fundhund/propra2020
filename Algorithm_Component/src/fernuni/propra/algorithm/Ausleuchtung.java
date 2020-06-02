@@ -1,6 +1,8 @@
 package fernuni.propra.algorithm;
 
+import java.awt.geom.Point2D;
 import java.io.File;
+import java.util.List;
 
 import fernuni.propra.file_processing.Room;
 import fernuni.propra.file_processing.XmlReader;
@@ -16,6 +18,12 @@ import fernuni.propra.file_processing.XmlReader;
  * vornehmen
  */
 public class Ausleuchtung implements IAusleuchtung {
+	
+	private List<Point2D.Float> lamps;
+	
+	public List<Point2D.Float> getLamps() {
+		return lamps;
+	}
 
 	/**
 	 * Überprüft die eingegebene Lösung auf Korrektheit
@@ -54,7 +62,7 @@ public class Ausleuchtung implements IAusleuchtung {
 		if (xmlFile == "" || !new File(xmlFile).isFile()) return 0;
 		
 		try {
-			
+
 			System.out.println();
 			System.out.println("Solving '" + xmlFile + "'...");
 			
@@ -62,7 +70,10 @@ public class Ausleuchtung implements IAusleuchtung {
 			Room room = xmlReader.createRoom();
 			
 			Solver solver = new Solver(room);
-			return solver.solve(timeLimit);
+			int numberOfLamps = solver.solve(timeLimit);
+			this.lamps = solver.getLampPositions();
+			
+			return numberOfLamps;
 			
 		} catch (Exception e) {
 			e.printStackTrace();
