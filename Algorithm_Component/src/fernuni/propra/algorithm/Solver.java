@@ -174,6 +174,7 @@ public class Solver {
 		
 		long startTime = System.currentTimeMillis();
 		
+		System.out.println();
 		System.out.println("Calculating candidate lamp positions...");
 		long rectanglesStartTime = System.currentTimeMillis();
 		setLamps(getCandidateLamps());
@@ -206,14 +207,6 @@ public class Solver {
 		if (endTime > 0 && System.currentTimeMillis() > endTime) {
 			throw new TimeLimitExceededException("Computation took longer than the set time limit of " + timeLimit + " seconds.");
 		}
-		
-//		System.out.println("LAMPS:");
-//		for (Lamp lamp : candidateLamps) {
-//			if (lamp.isOn()) System.out.println(lamp.getPosition().toString() + ", " + Arrays.toString(lamp.getRectangles()));
-//		}
-//		System.out.println(isRoomIlluminated(rectangleIlluminationMap));
-//		System.out.println();
-//		
 		
 		if (isRoomIlluminated(rectangleIlluminationMap)) {
 			setLamps(candidateLamps
