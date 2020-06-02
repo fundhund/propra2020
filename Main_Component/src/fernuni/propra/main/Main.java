@@ -59,6 +59,8 @@ public class Main {
 		XmlReader xmlReader = new XmlReader(inputFile);
 		Room room = xmlReader.createRoom();
 		
+		if (room == null) return;
+		
 		if (mode.contains("s")) {
 			
 			int timeLimit = params.containsKey("timeLimit") && params.get("timeLimit") != null 

@@ -11,6 +11,12 @@ import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 
+/**
+ * Creates a room from an XML file.
+ * 
+ * @author Marius Mielke (4531230)
+ *
+ */
 public class XmlReader {
 	
 	private String xmlPath;
@@ -21,16 +27,22 @@ public class XmlReader {
 	
 	public Room createRoom() throws JDOMException, IOException, IncorrectShapeException {
 		
-		SAXBuilder builder = new SAXBuilder();
-		File xmlFile = new File(xmlPath);
-		Document jdomDoc = (Document) builder.build(xmlFile);
-		Element root = jdomDoc.getRootElement();
-		
-		String id = getId(root);
-		List<Point2D.Float> corners = getPoints(root, "ecken");
-		List<Point2D.Float> lamps = getPoints(root, "lampen");
-		
-		return new Room(id, corners, lamps);
+		try {
+			SAXBuilder builder = new SAXBuilder();
+			File xmlFile = new File(xmlPath);
+			Document jdomDoc = (Document) builder.build(xmlFile);
+			Element root = jdomDoc.getRootElement();
+			
+			String id = getId(root);
+			List<Point2D.Float> corners = getPoints(root, "ecken");
+			List<Point2D.Float> lamps = getPoints(root, "lampen");
+			
+			return new Room(id, corners, lamps);
+			
+		} catch (Exception e) {
+			System.out.println("Invalid XML file '" + xmlPath + "'.");
+			return null;
+		}
 	}
 	
 	private String getId(Element root) {

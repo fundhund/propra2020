@@ -11,6 +11,12 @@ import org.jdom2.Element;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
+/**
+ * Creates an XML file from a room.
+ * 
+ * @author Marius Mielke (4531230)
+ *
+ */
 public class XmlWriter {
 	
 	private Room room;

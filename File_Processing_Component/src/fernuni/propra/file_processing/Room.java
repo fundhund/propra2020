@@ -53,7 +53,6 @@ public class Room {
 		this.shape = createShape();
 		this.walls = createWalls();
 		this.wallsByDirection = createWallsByDirection();
-//		this.intervals = createIntervals();
 		this.boundaries = createBoundaries();
 		this.rectangles = createRectangles();
 		this.width = calculateWidth();
