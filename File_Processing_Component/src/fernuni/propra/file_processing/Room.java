@@ -274,15 +274,15 @@ public class Room {
 	public Direction getDirection(Line2D.Float wall) {
 		
 		if (!this.walls.contains(wall)) {
-			return getDirection(
-				this.walls
-					.stream()
-					.filter(c -> 
-						wall.contains(c.getP1()) 
-							&& wall.contains(c.getP2()))
-					.findFirst()
-					.get()
-				);
+			Orientation orientation = getOrientation(wall);
+			
+			// Return direction of first found room wall with same direction that intersects wall
+			return getDirection(this.walls
+				.stream()
+				.filter(c -> getOrientation(c).equals(orientation))
+				.filter(c -> c.intersectsLine(wall))
+				.findFirst()
+				.get());
 		}
 		
 		if (this.wallsByDirection.get(Direction.NORTH).contains(wall)) return Direction.NORTH;
@@ -470,10 +470,6 @@ public class Room {
 
 	public Line2D.Float getNearestWall(Line2D.Float wall, Direction nearestWallDirection) {
 		Direction startWallDirection = getDirection(wall);
-		return getNearestWall(wall, startWallDirection, nearestWallDirection);
-	}
-	
-	public Line2D.Float getNearestWall(Line2D.Float wall, Direction startWallDirection, Direction nearestWallDirection) {
 		
 		if (startWallDirection.equals(nearestWallDirection)) {
 			return wall;
@@ -498,7 +494,7 @@ public class Room {
 		}
 		
 		Predicate<? super Line2D.Float> intersectsExtension = getIntersectsExtension(wall); 
-
+	
 		Line2D.Float nearestWall = getWalls(nearestWallDirection)
 				.stream()
 				.filter(isOnCorrectSide)
@@ -603,7 +599,7 @@ public class Room {
 		Direction oppositeDirection = direction.getOpposite();
 
 		Line2D.Float extendedWall = getExtendedWall(wall);
-		Line2D.Float oppositeWall = getNearestWall(extendedWall, direction, oppositeDirection);
+		Line2D.Float oppositeWall = getNearestWall(extendedWall, oppositeDirection);
 		
 		float x, y, w, h;
 		
