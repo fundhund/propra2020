@@ -2,6 +2,12 @@ package fernuni.propra.file_processing;
 
 import java.util.Map;
 
+/**
+ * Directions for walls.
+ * 
+ * @author Marius Mielke (4531230)
+ *
+ */
 public enum Direction {
 	NORTH,
   EAST,
@@ -15,6 +21,10 @@ public enum Direction {
       WEST,  EAST
   );
 
+	/**
+	 * Returns the opposite direction.
+	 * @return opposite direction
+	 */
   public Direction getOpposite() {
       return OPPOSITES.get(this);
   }
@@ -26,6 +36,10 @@ public enum Direction {
       WEST,  Orientation.VERTICAL
   );
 
+  /**
+   * Returns orientation of a direction.
+   * @return direction orientation
+   */
   public Orientation getOrientation() {
       return ORIENTATIONS.get(this);
   }

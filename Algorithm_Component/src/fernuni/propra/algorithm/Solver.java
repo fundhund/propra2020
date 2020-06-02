@@ -174,6 +174,7 @@ public class Solver {
 		
 		long startTime = System.currentTimeMillis();
 		
+		// Calculate candidate rectangles
 		System.out.println();
 		System.out.println("Calculating candidate lamp positions...");
 		long rectanglesStartTime = System.currentTimeMillis();
@@ -192,11 +193,19 @@ public class Solver {
 			this.endTime = startTime + timeLimit * 1000;
 		}
 		
-		System.out.println("Reducing lamps...");
+		// Reduce lamps
+		System.out.println();
+		System.out.println("Running lamp reduction...");
+		int oldNumberOfLamps = this.numberOfLamps;
 		long reduceStartTime = System.currentTimeMillis();
 		reduceLamps(switchedOffLamps, 0, rectangleIlluminationMap);
-		System.out.println("Reduced lamps in " + ((System.currentTimeMillis() - reduceStartTime)/1000f) + " seconds.");
 		
+		String lampInfo = oldNumberOfLamps == this.numberOfLamps
+				? "No further reduction was carried out."
+				: "Reduced number of lamps from " + oldNumberOfLamps + " to " + this.numberOfLamps + ".";
+		
+		System.out.println("Lamp reduction took " + ((System.currentTimeMillis() - reduceStartTime)/1000f) + " seconds. " + lampInfo);
+		System.out.println();
 		System.out.println("Solved with " + numberOfLamps + " lamp(s) in " + ((System.currentTimeMillis() - startTime)/1000f) + " seconds.");
 		
 		return numberOfLamps;
