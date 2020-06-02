@@ -27,7 +27,6 @@ public class Room {
 	private Path2D.Float shape;
 	private List<Line2D.Float> walls;
 	private HashMap<Direction, List<Line2D.Float>> wallsByDirection;
-	private HashMap<Orientation, List<java.lang.Float>> intervals;
 	private HashMap<String, java.lang.Float> boundaries;
 	private Rectangle2D.Float[] rectangles;
 	private float width;
