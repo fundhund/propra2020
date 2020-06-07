@@ -75,8 +75,10 @@ public class Ausleuchtung implements IAusleuchtung {
 			
 			return numberOfLamps;
 			
+		} catch (TimeLimitExceededException e) {
+			System.out.println("Time limit exceeded.");
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("An error occured while trying to solve room.");
 		}
 		
 		return 0;

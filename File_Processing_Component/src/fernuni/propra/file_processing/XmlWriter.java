@@ -25,7 +25,7 @@ public class XmlWriter {
 		this.room = room;
 	}
 	
-	public void writeXml(String fileName) throws IOException {
+	public void writeXml(String fileName) {
 		
       Document document = new Document();
       
@@ -43,14 +43,19 @@ public class XmlWriter {
       
       document.setContent(raum);
       
-      FileWriter fileWriter = new FileWriter(fileName);
-      XMLOutputter xmlOutputter = new XMLOutputter();
-      xmlOutputter.setFormat(Format.getPrettyFormat());
-      xmlOutputter.output(document, fileWriter);
-      
-      System.out.println("Saved solution as '" + fileName + "'.");
-      
-      fileWriter.close();
+      try {
+				FileWriter fileWriter = new FileWriter(fileName);
+				XMLOutputter xmlOutputter = new XMLOutputter();
+				xmlOutputter.setFormat(Format.getPrettyFormat());
+				xmlOutputter.output(document, fileWriter);
+				
+				System.out.println("Saved solution as '" + fileName + "'.");
+				
+				fileWriter.close();
+				
+			} catch (IOException e) {
+				System.out.println("An error occured while trying to write to file '" + fileName + "'.");
+			}
 	}
 	
 	private Element createXmlListOfPoints(String parentName, String childName, List<Point2D.Float> points) {

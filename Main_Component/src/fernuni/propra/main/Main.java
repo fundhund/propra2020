@@ -2,14 +2,10 @@ package fernuni.propra.main;
 
 import java.awt.EventQueue;
 import java.awt.geom.Point2D;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
-import org.jdom2.JDOMException;
-
 import fernuni.propra.algorithm.Ausleuchtung;
-import fernuni.propra.algorithm.TimeLimitExceededException;
 import fernuni.propra.file_processing.*;
 import fernuni.propra.user_interface.UserInterface;
 
@@ -36,12 +32,8 @@ public class Main {
 	 * Haupteinstiegsfunktion
 	 * 
 	 * @param args command line arguments
-	 * @throws IOException IO exception
-	 * @throws JDOMException JDOM exception
-	 * @throws IncorrectShapeException exception for an invalid room definition
-	 * @throws TimeLimitExceededException exception for a exceeding a given time limit
 	 */
-	public static void main(String[] args) throws JDOMException, IOException, IncorrectShapeException, TimeLimitExceededException {
+	public static void main(String[] args) {
 			
 		HashMap<String, String> params = getParams(args);
 		

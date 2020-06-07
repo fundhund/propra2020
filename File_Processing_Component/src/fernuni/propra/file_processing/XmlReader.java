@@ -2,13 +2,11 @@ package fernuni.propra.file_processing;
 
 import java.awt.geom.Point2D;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.jdom2.Document;
 import org.jdom2.Element;
-import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 
 /**
@@ -21,11 +19,11 @@ public class XmlReader {
 	
 	private String xmlPath;
 	
-	public XmlReader(String xmlPath) throws JDOMException, IOException {
+	public XmlReader(String xmlPath) {
 		this.xmlPath = xmlPath;
 	}
 	
-	public Room createRoom() throws JDOMException, IOException, IncorrectShapeException {
+	public Room createRoom() {
 		
 		try {
 			SAXBuilder builder = new SAXBuilder();
